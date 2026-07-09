@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-primary: #1A3A5F;
+    --color-on-primary: #ffffff;
+    --color-secondary: #769382;
+    --color-on-secondary: #ffffff;
+    --color-tertiary: #E8F3F1;
+    --color-on-tertiary: #1A3A5F;
+    --color-background: #F9FAFB;
+    --color-on-background: #1F2937;
+    --color-surface: #ffffff;
+    --color-on-surface: #1F2937;
+    --color-outline: #E5E7EB;
+    --color-outline-variant: #F3F4F6;
+    --color-surface-variant: #F9FAFB;
+    --color-on-surface-variant: #6B7280;
+
+    --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark {
+    --color-primary: #60A5FA;
+    --color-on-primary: #0F172A;
+    --color-secondary: #8DAFA0;
+    --color-on-secondary: #0D1612;
+    --color-tertiary: #1E293B;
+    --color-on-tertiary: #E2E8F0;
+    --color-background: #0B111E;
+    --color-on-background: #F1F5F9;
+    --color-surface: #111C2E;
+    --color-on-surface: #F1F5F9;
+    --color-outline: #334155;
+    --color-outline-variant: #1E293B;
+    --color-surface-variant: #0F172A;
+    --color-on-surface-variant: #94A3B8;
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.fill-icon {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Dotted background pattern */
+.dotted-bg {
+    background-image: radial-gradient(#D1D5DB 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* Card shadow with hover lift */
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-shadow:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    transform: translateY(-2px);
+}
+
+/* Glass panel */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+}
+
+/* Slider animations */
+.slider-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-text-enter {
+    animation: slideTextIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes slideTextIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pagination dot */
+.pagination-dot {
+    transition: all 0.3s ease;
+}
+.pagination-dot.active {
+    width: 24px;
+    background-color: #1A3A5F;
+}
+
+/* Infinite Marquee Loop */
+@keyframes marquee {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+/* React Bits: Shiny Text Animation */
+@keyframes shiny-text {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.animate-shiny-text {
+    background-size: 200% auto;
+    animation: shiny-text 4s linear infinite;
+}
+
+/* React Bits: Floating subtle animation */
+@keyframes float-gentle {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(1.5deg);
+    }
+}
+
+.animate-float {
+    animation: float-gentle 6s ease-in-out infinite;
+}
+
