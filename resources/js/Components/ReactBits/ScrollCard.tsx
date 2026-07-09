@@ -106,6 +106,7 @@ export default function ScrollCard({
             }}
             style={{
                 rotateX: enableTilt ? rotateX : 0,
+
                 rotateY: enableTilt ? rotateY : 0,
                 transformStyle: 'preserve-3d',
             }}
