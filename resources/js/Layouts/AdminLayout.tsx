@@ -8,36 +8,53 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children, title }: AdminLayoutProps) {
-    const user = usePage().props.auth?.user;
+    const { auth, flash } = usePage().props as any;
+    const user = auth?.user;
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { isDark, toggleDarkMode } = useDarkMode();
+
+    const currentRoute = route().current() || '';
 
     const navSections = [
         {
             category: 'UTAMA',
             items: [
-                { name: 'Dashboard', href: route('dashboard'), icon: 'dashboard', active: true },
-                { name: 'Analitik', href: '#', icon: 'analytics', active: false },
-                { name: 'Kalender Reservasi', href: '#', icon: 'calendar_month', active: false },
+                { name: 'Dashboard', href: route('dashboard'), icon: 'dashboard', active: currentRoute === 'dashboard' },
             ],
         },
         {
-            category: 'TRANSAKSI & LAYANAN',
+            category: 'MASTER DATA',
             items: [
-                { name: 'Fitur POS', href: '#', icon: 'point_of_sale', active: false },
-                { name: 'Reservasi & Pesanan', href: '#', icon: 'shopping_cart', active: false },
-                { name: 'Laporan Optometris', href: '#', icon: 'clinical_notes', active: false },
-                { name: 'Voucher & Promo', href: '#', icon: 'local_offer', active: false },
+                { name: 'Cabang Optik', href: route('branches.index'), icon: 'storefront', active: currentRoute.startsWith('branches.') },
+                { name: 'Katalog Produk', href: route('products.index'), icon: 'eyeglasses', active: currentRoute.startsWith('products.') },
             ],
         },
         {
-            category: 'KONTEN OPTIK',
+            category: 'INVENTORI',
             items: [
-                { name: 'Katalog Frame', href: '#', icon: 'category', active: false },
-                { name: 'Testimoni', href: '#', icon: 'rate_review', active: false },
-                { name: 'Artikel Kesehatan', href: '#', icon: 'health_and_safety', active: false },
-                { name: 'Program Affiliate', href: '#', icon: 'handshake', active: false },
+                { name: 'Gudang Pusat', href: route('central-inventory.index'), icon: 'warehouse', active: currentRoute.startsWith('central-inventory.') },
+                { name: 'Stok Cabang', href: route('branch-inventory.index'), icon: 'inventory_2', active: currentRoute.startsWith('branch-inventory.') },
+            ],
+        },
+        {
+            category: 'OPERASIONAL',
+            items: [
+                { name: 'Transfer Stok', href: route('stock-transfers.index'), icon: 'local_shipping', active: currentRoute.startsWith('stock-transfers.') },
+                { name: 'Penyesuaian Stok', href: route('stock-adjustments.index'), icon: 'tune', active: currentRoute.startsWith('stock-adjustments.') },
+                { name: 'Stock Opname', href: route('stock-opnames.index'), icon: 'fact_check', active: currentRoute.startsWith('stock-opnames.') },
+            ],
+        },
+        {
+            category: 'LAPORAN & ANALITIK',
+            items: [
+                { name: 'Pusat Laporan', href: route('reports.index'), icon: 'analytics', active: currentRoute.startsWith('reports.') },
+            ],
+        },
+        {
+            category: 'PENGATURAN',
+            items: [
+                { name: 'Manajemen User & Role', href: route('users.index'), icon: 'manage_accounts', active: currentRoute.startsWith('users.') },
             ],
         },
     ];
@@ -192,20 +209,53 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                             </button>
                         </div>
 
-                        {/* User Profile Pill */}
-                        <div className="flex items-center gap-2.5 pl-3 border-l border-outline-variant">
-                            <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs">
-                                {user?.name?.charAt(0).toUpperCase() || 'A'}
+                        {/* User Profile Pill & Logout */}
+                        <div className="flex items-center gap-3 pl-3 border-l border-outline-variant">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs shadow-2xs">
+                                    {user?.name?.charAt(0).toUpperCase() || 'A'}
+                                </div>
+                                <div className="hidden sm:block">
+                                    <span className="font-semibold text-sm text-primary block leading-tight">
+                                        {user?.name || 'Admin Optik'}
+                                    </span>
+                                    {user?.role && (
+                                        <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-primary/10 text-primary">
+                                            {user.role.display_name}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
-                            <span className="font-semibold text-sm text-primary hidden sm:block">
-                                {user?.name || 'Admin Optik'}
-                            </span>
+
+                            <Link
+                                href={route('logout')}
+                                method="post"
+                                as="button"
+                                title="Keluar dari Akun"
+                                className="p-2 rounded-xl text-on-surface-variant hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer"
+                            >
+                                <span className="material-symbols-outlined text-[20px]">logout</span>
+                            </Link>
                         </div>
                     </div>
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 p-6 lg:p-8 overflow-y-auto">{children}</main>
+                <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+                    {flash?.success && (
+                        <div className="mb-6 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-medium text-sm flex items-center gap-2 shadow-xs">
+                            <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                            <span>{flash.success}</span>
+                        </div>
+                    )}
+                    {flash?.error && (
+                        <div className="mb-6 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 font-medium text-sm flex items-center gap-2 shadow-xs">
+                            <span className="material-symbols-outlined text-[20px]">error</span>
+                            <span>{flash.error}</span>
+                        </div>
+                    )}
+                    {children}
+                </main>
             </div>
         </div>
     );

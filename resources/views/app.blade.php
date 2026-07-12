@@ -6,6 +6,18 @@
 
         <title inertia>{{ config('app.name', 'Optik Calm') }}</title>
 
+        <!-- Open Graph / WhatsApp / Social Share Meta Tags -->
+        <meta property="og:title" content="Optik Calm — Modern Optical Store Management & Eye Care">
+        <meta property="og:description" content="Layanan optik modern terpercaya. Pilihan frame dan lensa berkualitas tinggi dengan pelayanan profesional di seluruh cabang Optik Calm.">
+        <meta property="og:image" content="{{ asset('share-preview.png') }}">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url('/') }}">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Optik Calm — Modern Optical Store">
+        <meta name="twitter:description" content="Pilihan frame dan lensa berkualitas tinggi dengan pelayanan profesional di seluruh cabang Optik Calm.">
+        <meta name="twitter:image" content="{{ asset('share-preview.png') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

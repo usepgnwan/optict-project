@@ -4,7 +4,7 @@ import HomeLayout from '@/Layouts/HomeLayout';
 import CatalogSection from '@/Components/Home/CatalogSection';
 import CtaSection from '@/Components/Home/CtaSection';
 
-export default function Catalog() {
+export default function Catalog({ dbProducts = [], branches = [] }: { dbProducts?: any[]; branches?: any[] }) {
     return (
         <HomeLayout title="Katalog Kacamata & Frame | Optik Calm">
             {/* Catalog Page Header Banner */}
@@ -30,7 +30,7 @@ export default function Catalog() {
             </div>
 
             {/* Catalog Section Component */}
-            <CatalogSection />
+            <CatalogSection dbProducts={dbProducts} branches={branches} />
 
             {/* CTA Section */}
             <CtaSection />

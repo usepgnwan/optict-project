@@ -14,7 +14,7 @@ import BranchDirectorySection from '@/Components/Home/BranchDirectorySection';
 import BookingFormSection from '@/Components/Home/BookingFormSection';
 import FaqSection from '@/Components/Home/FaqSection';
 
-export default function Home() {
+export default function Home({ dbProducts = [], branches = [] }: { dbProducts?: any[]; branches?: any[] }) {
     return (
         <HomeLayout title="Home | Layanan Kesehatan Mata Terpercaya">
             <HeroSection />
@@ -23,7 +23,7 @@ export default function Home() {
             <ProcessSection />
             <LocationsSection />
             <ServicesSection />
-            <CatalogSection isHomePreview={true} />
+            <CatalogSection isHomePreview={true} dbProducts={dbProducts} branches={branches} />
             <AffiliateSection />
             <CtaSection />
             <StatsSection />

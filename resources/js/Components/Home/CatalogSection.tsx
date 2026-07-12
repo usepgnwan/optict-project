@@ -2,124 +2,141 @@ import React, { useState, useMemo } from 'react';
 import { Link } from '@inertiajs/react';
 import { ScrollCard } from '@/Components/ReactBits';
 
-interface Product {
-    id: number;
+interface BranchAvailability {
+    branchId: number;
+    branchName: string;
+    city: string;
+    address: string;
+    stock: number;
+}
+
+const toSlug = (text: string) =>
+    text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+
+interface ProductItem {
+    id: number | string;
+    slug?: string;
     category: string;
     name: string;
+    sku?: string;
+    brand?: string;
+    frameType?: string;
+    frameColor?: string;
+    lensType?: string;
     price: string;
     priceValue: number;
     badge: { text: string; color: string } | null;
     image: string;
+    description: string;
+    centralStock: number;
+    branchAvailability: BranchAvailability[];
 }
 
-const products: Product[] = [
+const defaultProducts: ProductItem[] = [
     {
-        id: 1,
+        id: 101,
         category: 'Titanium Series',
         name: 'Aura Gold Classic',
+        sku: 'FRM-AURA-01',
+        brand: 'Optik Calm Titanium',
         price: 'Rp 1.450.000',
         priceValue: 1450000,
         badge: { text: 'New Arrival', color: 'bg-secondary text-on-secondary' },
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeWPF_of7nlKq-1AibDLuWcUstIxVEs7BG3rsc5Ojb8rJ0Y1CetJUtW5xvKg8CvFPaHnmIdhXM4SLWttp6lg5tQINjiSsN5Vc0B5xpIRwiiThiRz-zC-GFj5mLkM_rKXFbTc_VPmxNm-J5iqiGPubB3H5nxWvqj1WRZNvFtCmpYQmJdwr-wIrkHjy9sKtrBxJXtkzztnjf21d-1TK74gCdQDdSm9cmBHLEcaU2jp3qH3uyPiUeLfRl-DI2y_IDnfBFcDrQiHU2Diw',
+        description: 'Bingkai berbahan titanium murni yang sangat ringan, anti-karat, serta hipoalergenik untuk kenyamanan maksimal sepanjang hari.',
+        centralStock: 24,
+        branchAvailability: [
+            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8 },
+            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5 },
+        ],
     },
     {
-        id: 2,
+        id: 102,
         category: 'Urban Lifestyle',
         name: 'Midnight Matte',
+        sku: 'FRM-MID-02',
+        brand: 'Optik Calm Urban',
         price: 'Rp 980.000',
         priceValue: 980000,
         badge: { text: 'Popular', color: 'bg-primary text-on-primary' },
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD8t0ZJeToebmAUNhBH3vVQZiDPkzHjlIhIaNCyBTjnGxx-FkhEuiozaWI5g14RqByGTBAdSjLlgQ3Ry-6P7kiRhqb9NqWzJlCGFjbc94qUomrVwN4WNYu_Q34DFKyi_Y4qNP0C_FWk21Eo9C020IDn1NKYFr_lsiX6r9gEjOei1CTzLcp9MHSLCTZmxYO2AsgZCmmXHUu4N6YLAx5fV2XZ1HUG7AZpptO0ioKhm_vUA0XL3089BVp_RDiKdZq7neQhLZO85D_sMoM',
+        description: 'Desain asetat matte modern yang kokoh dengan sentuhan finishing halus, cocok untuk aktivitas urban sehari-hari.',
+        centralStock: 18,
+        branchAvailability: [
+            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 12 },
+            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0 },
+        ],
     },
     {
-        id: 3,
+        id: 103,
         category: 'Modern Collection',
         name: 'Sage Transparent',
+        sku: 'FRM-SAGE-03',
+        brand: 'Optik Calm Studio',
         price: 'Rp 1.120.000',
         priceValue: 1120000,
         badge: null,
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAL9yzDERVRDF5e8sYvl2u4WwItCsNRf3xj8KS0EBPZKj8AqhCz8rJkzlLg3BWyTbAsqh6BwKmdbGJQ-bWll27_enmNPWiqFQ7uJxdvrpsHS2cYQwybbZ2VKZQ_I8bq-MDcmjEvQeCnqZn05MlJMQqqZio3ULrySe1HZprlqRRGavGjsQopjWjJ9mu0nD4VmriCRX70O4YffPo_njj85JhDUgoB9AHl1MM713-g03fkyQBuB96QGz5nxC9PuHvzq0gf_jMfSosCS0s',
+        description: 'Bingkai transparan bernuansa sage crystal yang elegan, memberikan tampilan wajah cerah dan estetik ala Korea.',
+        centralStock: 30,
+        branchAvailability: [
+            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 6 },
+            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 4 },
+        ],
     },
     {
-        id: 4,
+        id: 104,
         category: 'Heritage Series',
         name: 'Tortoise Round',
+        sku: 'FRM-TORT-04',
+        brand: 'Optik Calm Heritage',
         price: 'Rp 1.250.000',
         priceValue: 1250000,
         badge: null,
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEk8WGvLews9RY9DsTrofkrkV3uV39GXO6hbZ5EzZQOkzYe7Xbc1L1Vz8oAolPM8Uqva6NdfiokLZx51x_VCeTgRdb_mlzXxsn5XSt89EyIJPHOmEzBjzqcfeAoXjKgNZpwZAL8HrcmIlgnNiUBXmeoi-eSYk7eDbRbHFqXVWZ8hqR4HJU0SnYIYz1c8eAtCOhHeoZEZeK7KuAbVf0Eph9elkEAyTzkDIo3wA3E1IXgJ8aJgLiq26g4NPcfObgJ7eCzDgClpk-uMs',
+        description: 'Siluet klasik bulat dengan corak tortoise klasik yang tak lekang oleh waktu, dilengkapi engsel fleksibel premium.',
+        centralStock: 15,
+        branchAvailability: [
+            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 3 },
+            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 7 },
+        ],
     },
     {
-        id: 5,
+        id: 105,
         category: 'Minimalist Frame',
         name: 'Crystal Clear Acetate',
+        sku: 'FRM-CRYS-05',
+        brand: 'Optik Calm Pure',
         price: 'Rp 750.000',
         priceValue: 750000,
         badge: { text: 'Best Value', color: 'bg-emerald-600 text-white' },
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAL9yzDERVRDF5e8sYvl2u4WwItCsNRf3xj8KS0EBPZKj8AqhCz8rJkzlLg3BWyTbAsqh6BwKmdbGJQ-bWll27_enmNPWiqFQ7uJxdvrpsHS2cYQwybbZ2VKZQ_I8bq-MDcmjEvQeCnqZn05MlJMQqqZio3ULrySe1HZprlqRRGavGjsQopjWjJ9mu0nD4VmriCRX70O4YffPo_njj85JhDUgoB9AHl1MM713-g03fkyQBuB96QGz5nxC9PuHvzq0gf_jMfSosCS0s',
+        description: 'Bingkai asetat jernih transparan yang super ringan, bergaya kontemporer cocok untuk lensa minus maupun progresif.',
+        centralStock: 40,
+        branchAvailability: [
+            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 15 },
+            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 10 },
+        ],
     },
     {
-        id: 6,
+        id: 106,
         category: 'Luxury Titanium',
         name: 'Obsidian Black Titanium',
+        sku: 'FRM-OBS-06',
+        brand: 'Optik Calm Titanium',
         price: 'Rp 1.850.000',
         priceValue: 1850000,
         badge: { text: 'Premium', color: 'bg-amber-600 text-white' },
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeWPF_of7nlKq-1AibDLuWcUstIxVEs7BG3rsc5Ojb8rJ0Y1CetJUtW5xvKg8CvFPaHnmIdhXM4SLWttp6lg5tQINjiSsN5Vc0B5xpIRwiiThiRz-zC-GFj5mLkM_rKXFbTc_VPmxNm-J5iqiGPubB3H5nxWvqj1WRZNvFtCmpYQmJdwr-wIrkHjy9sKtrBxJXtkzztnjf21d-1TK74gCdQDdSm9cmBHLEcaU2jp3qH3uyPiUeLfRl-DI2y_IDnfBFcDrQiHU2Diw',
-    },
-    {
-        id: 7,
-        category: 'Classic Aviator',
-        name: 'Aviator Pilot Gold',
-        price: 'Rp 1.150.000',
-        priceValue: 1150000,
-        badge: null,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEk8WGvLews9RY9DsTrofkrkV3uV39GXO6hbZ5EzZQOkzYe7Xbc1L1Vz8oAolPM8Uqva6NdfiokLZx51x_VCeTgRdb_mlzXxsn5XSt89EyIJPHOmEzBjzqcfeAoXjKgNZpwZAL8HrcmIlgnNiUBXmeoi-eSYk7eDbRbHFqXVWZ8hqR4HJU0SnYIYz1c8eAtCOhHeoZEZeK7KuAbVf0Eph9elkEAyTzkDIo3wA3E1IXgJ8aJgLiq26g4NPcfObgJ7eCzDgClpk-uMs',
-    },
-    {
-        id: 8,
-        category: 'Retro Chic',
-        name: 'Vintage Havana Horn',
-        price: 'Rp 890.000',
-        priceValue: 890000,
-        badge: null,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD8t0ZJeToebmAUNhBH3vVQZiDPkzHjlIhIaNCyBTjnGxx-FkhEuiozaWI5g14RqByGTBAdSjLlgQ3Ry-6P7kiRhqb9NqWzJlCGFjbc94qUomrVwN4WNYu_Q34DFKyi_Y4qNP0C_FWk21Eo9C020IDn1NKYFr_lsiX6r9gEjOei1CTzLcp9MHSLCTZmxYO2AsgZCmmXHUu4N6YLAx5fV2XZ1HUG7AZpptO0ioKhm_vUA0XL3089BVp_RDiKdZq7neQhLZO85D_sMoM',
-    },
-    {
-        id: 9,
-        category: 'Executive Line',
-        name: 'Carbon Fiber Lite',
-        price: 'Rp 2.100.000',
-        priceValue: 2100000,
-        badge: { text: 'Limited', color: 'bg-indigo-600 text-white' },
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeWPF_of7nlKq-1AibDLuWcUstIxVEs7BG3rsc5Ojb8rJ0Y1CetJUtW5xvKg8CvFPaHnmIdhXM4SLWttp6lg5tQINjiSsN5Vc0B5xpIRwiiThiRz-zC-GFj5mLkM_rKXFbTc_VPmxNm-J5iqiGPubB3H5nxWvqj1WRZNvFtCmpYQmJdwr-wIrkHjy9sKtrBxJXtkzztnjf21d-1TK74gCdQDdSm9cmBHLEcaU2jp3qH3uyPiUeLfRl-DI2y_IDnfBFcDrQiHU2Diw',
-    },
-    {
-        id: 10,
-        category: 'Everyday Comfort',
-        name: 'Flex Memory Tech',
-        price: 'Rp 650.000',
-        priceValue: 650000,
-        badge: null,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAL9yzDERVRDF5e8sYvl2u4WwItCsNRf3xj8KS0EBPZKj8AqhCz8rJkzlLg3BWyTbAsqh6BwKmdbGJQ-bWll27_enmNPWiqFQ7uJxdvrpsHS2cYQwybbZ2VKZQ_I8bq-MDcmjEvQeCnqZn05MlJMQqqZio3ULrySe1HZprlqRRGavGjsQopjWjJ9mu0nD4VmriCRX70O4YffPo_njj85JhDUgoB9AHl1MM713-g03fkyQBuB96QGz5nxC9PuHvzq0gf_jMfSosCS0s',
-    },
-    {
-        id: 11,
-        category: 'Blue Light Armor',
-        name: 'Digital Shield Pro',
-        price: 'Rp 920.000',
-        priceValue: 920000,
-        badge: { text: 'Anti-Blue Light', color: 'bg-sky-600 text-white' },
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD8t0ZJeToebmAUNhBH3vVQZiDPkzHjlIhIaNCyBTjnGxx-FkhEuiozaWI5g14RqByGTBAdSjLlgQ3Ry-6P7kiRhqb9NqWzJlCGFjbc94qUomrVwN4WNYu_Q34DFKyi_Y4qNP0C_FWk21Eo9C020IDn1NKYFr_lsiX6r9gEjOei1CTzLcp9MHSLCTZmxYO2AsgZCmmXHUu4N6YLAx5fV2XZ1HUG7AZpptO0ioKhm_vUA0XL3089BVp_RDiKdZq7neQhLZO85D_sMoM',
-    },
-    {
-        id: 12,
-        category: 'Designer Series',
-        name: 'Rose Gold Geometric',
-        price: 'Rp 1.550.000',
-        priceValue: 1550000,
-        badge: null,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEk8WGvLews9RY9DsTrofkrkV3uV39GXO6hbZ5EzZQOkzYe7Xbc1L1Vz8oAolPM8Uqva6NdfiokLZx51x_VCeTgRdb_mlzXxsn5XSt89EyIJPHOmEzBjzqcfeAoXjKgNZpwZAL8HrcmIlgnNiUBXmeoi-eSYk7eDbRbHFqXVWZ8hqR4HJU0SnYIYz1c8eAtCOhHeoZEZeK7KuAbVf0Eph9elkEAyTzkDIo3wA3E1IXgJ8aJgLiq26g4NPcfObgJ7eCzDgClpk-uMs',
+        description: 'Pilihan eksekutif kelas atas dengan lapisan titanium hitam obsidian, tangkai ultra-slim dan nosepad silikon lembut.',
+        centralStock: 10,
+        branchAvailability: [
+            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 4 },
+            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 3 },
+        ],
     },
 ];
 
@@ -127,20 +144,80 @@ const ITEMS_PER_PAGE = 6;
 
 interface CatalogSectionProps {
     isHomePreview?: boolean;
+    dbProducts?: any[];
+    branches?: any[];
 }
 
-export default function CatalogSection({ isHomePreview = false }: CatalogSectionProps) {
+export default function CatalogSection({ isHomePreview = false, dbProducts = [], branches = [] }: CatalogSectionProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [priceFilter, setPriceFilter] = useState('all');
     const [sortBy, setSortBy] = useState('default');
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
 
-    // Filter & Sort Logic (used only on standalone full catalog page)
+    // Merge database products with showcase products
+    const allProducts = useMemo<ProductItem[]>(() => {
+        const formattedDb: ProductItem[] = (dbProducts || []).map((p: any) => {
+            const defaultBranches = (branches || []).map((b: any) => {
+                const inv = (p.branch_inventories || []).find((bi: any) => bi.branch_id === b.id);
+                return {
+                    branchId: b.id,
+                    branchName: b.name,
+                    city: b.city || 'Jakarta',
+                    address: b.address || '',
+                    stock: inv ? inv.current_stock : 0,
+                };
+            });
+
+            const formatFrameType = (type: string) => {
+                if (type === 'full_frame') return 'Full Frame';
+                if (type === 'half_frame') return 'Half Frame';
+                if (type === 'rimless') return 'Rimless';
+                return type || 'Full Frame';
+            };
+
+            const formatLensType = (type: string) => {
+                if (type === 'single_vision') return 'Single Vision';
+                if (type === 'bifocal') return 'Bifocal';
+                if (type === 'progressive') return 'Progressive';
+                return type || 'Single Vision';
+            };
+
+            return {
+                id: p.id,
+                slug: toSlug(p.name),
+                category: p.category ? p.category.toUpperCase() : 'FRAME',
+                name: p.name,
+                sku: p.sku || `SKU-${p.id}`,
+                brand: p.brand || 'Optik Calm',
+                frameType: formatFrameType(p.frame_type),
+                frameColor: p.frame_color || 'Standard',
+                lensType: formatLensType(p.lens_type),
+                price: `Rp ${Number(p.selling_price || 0).toLocaleString('id-ID')}`,
+                priceValue: Number(p.selling_price || 0),
+                badge: { text: p.category?.toUpperCase() || 'FRAME', color: 'bg-primary text-on-primary' },
+                image: p.image_url || p.image_path ? (p.image_url || `/storage/${p.image_path}`) : defaultProducts[0].image,
+                description: p.description || 'Bingkai kacamata presisi tinggi standar optikal Optik Calm.',
+                centralStock: p.central_inventory?.quantity ?? 0,
+                branchAvailability: defaultBranches.length > 0 ? defaultBranches : defaultProducts[0].branchAvailability,
+            };
+        });
+
+        // Show exact Admin products if any exist in database, otherwise fall back to curated defaults
+        if (formattedDb.length > 0) {
+            return formattedDb;
+        }
+
+        return defaultProducts.map(p => ({ ...p, slug: p.slug || toSlug(p.name) }));
+    }, [dbProducts, branches]);
+
+    // Filter & Sort Logic
     const filteredProducts = useMemo(() => {
-        let list = products.filter((p) => {
+        let list = allProducts.filter((p) => {
             const matchesSearch =
                 p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                p.category.toLowerCase().includes(searchQuery.toLowerCase());
+                p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (p.sku && p.sku.toLowerCase().includes(searchQuery.toLowerCase()));
 
             let matchesPrice = true;
             if (priceFilter === 'under_1m') {
@@ -161,7 +238,7 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
         }
 
         return list;
-    }, [searchQuery, priceFilter, sortBy]);
+    }, [allProducts, searchQuery, priceFilter, sortBy]);
 
     const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
     const paginatedProducts = useMemo(() => {
@@ -169,8 +246,7 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
         return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
     }, [filteredProducts, currentPage]);
 
-    // When on Home preview mode, show top 6 products directly (3 columns grid)
-    const displayProducts = isHomePreview ? products.slice(0, 6) : paginatedProducts;
+    const displayProducts = isHomePreview ? allProducts.slice(0, 6) : paginatedProducts;
 
     return (
         <section id="catalog" className="py-20 max-w-[1200px] mx-auto px-6 scroll-mt-24">
@@ -179,21 +255,21 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div>
                         <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-3">
-                            Koleksi Unggulan
+                            Koleksi Unggulan &amp; Katalog
                         </span>
                         <h2 className="font-semibold text-[32px] leading-[40px] tracking-tight text-primary mb-2">
                             Katalog Kacamata &amp; Frame
                         </h2>
                         <p className="text-on-surface-variant max-w-2xl">
-                            Temukan bingkai favorit Anda yang menggabungkan presisi ergonomis, material ringan berkualitas tinggi, dan keanggunan gaya modern.
+                            Temukan bingkai favorit Anda dan cek langsung ketersediaan stok real-time di Gudang Pusat maupun di seluruh cabang Optik Calm.
                         </p>
                     </div>
 
                     <Link
-                        href="/katalog-kacamataa"
+                        href="/katalog-kacamata"
                         className="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-full font-bold text-sm tracking-wide shadow-lg hover:bg-primary/90 transition-all shrink-0 active:scale-95"
                     >
-                        Lihat Lainnya <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        Lihat Semua Katalog <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </Link>
                 </div>
             )}
@@ -214,7 +290,7 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                                     setSearchQuery(e.target.value);
                                     setCurrentPage(1);
                                 }}
-                                placeholder="Cari model atau kategori frame..."
+                                placeholder="Cari nama kacamata, SKU, atau kategori..."
                                 className="w-full h-12 pl-12 pr-4 rounded-2xl bg-surface-variant border border-outline-variant text-primary placeholder:text-on-surface-variant/70 focus:outline-none focus:border-primary transition-all text-sm"
                             />
                             {searchQuery && (
@@ -232,7 +308,6 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
 
                         {/* Price Range Filter & Sort */}
                         <div className="flex flex-col sm:flex-row items-center gap-3">
-                            {/* Price Filter */}
                             <div className="w-full sm:w-auto flex items-center gap-2 bg-surface-variant px-4 py-1.5 rounded-2xl border border-outline-variant">
                                 <span className="material-symbols-outlined text-primary text-[20px]">filter_alt</span>
                                 <select
@@ -251,7 +326,6 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                                 </select>
                             </div>
 
-                            {/* Sort Filter */}
                             <div className="w-full sm:w-auto flex items-center gap-2 bg-surface-variant px-4 py-1.5 rounded-2xl border border-outline-variant">
                                 <span className="material-symbols-outlined text-primary text-[20px]">sort</span>
                                 <select
@@ -294,18 +368,21 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                 </>
             )}
 
-            {/* Products Grid (3 columns per row) */}
+            {/* Products Grid */}
             {displayProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {displayProducts.map((product, idx) => (
                         <ScrollCard
-                            key={product.id}
+                            key={`${product.id}-${idx}`}
                             index={idx}
                             direction="up"
                             enableSpotlight={false}
                             className="group bg-surface rounded-3xl border border-outline-variant overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
                         >
-                            <div className="h-64 bg-tertiary/40 flex items-center justify-center p-8 relative overflow-hidden">
+                            <Link
+                                href={`/katalog-kacamata/${product.slug}`}
+                                className="h-64 bg-tertiary/40 flex items-center justify-center p-8 relative overflow-hidden block group-hover:bg-tertiary/60 transition-colors"
+                            >
                                 <img
                                     className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                                     src={product.image}
@@ -316,29 +393,56 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                                         {product.badge.text}
                                     </span>
                                 )}
-                            </div>
+                            </Link>
                             <div className="p-7 flex-1 flex flex-col justify-between">
-                                <div className="mb-6">
-                                    <p className="text-secondary font-bold text-[11px] uppercase tracking-widest mb-1">
-                                        {product.category}
-                                    </p>
-                                    <h4 className="font-semibold text-xl text-primary">{product.name}</h4>
+                                <div className="mb-4">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <p className="text-secondary font-bold text-[11px] uppercase tracking-widest">
+                                            {product.category}
+                                        </p>
+                                        {product.sku && (
+                                            <span className="text-[11px] font-mono text-on-surface-variant">
+                                                {product.sku}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <Link
+                                        href={`/katalog-kacamata/${product.slug}`}
+                                        className="font-semibold text-xl text-primary block hover:underline"
+                                    >
+                                        {product.name}
+                                    </Link>
+                                    {product.brand && (
+                                        <p className="text-xs text-on-surface-variant mt-0.5">Brand: {product.brand}</p>
+                                    )}
                                 </div>
+
+                                {/* Quick Stock Availability Preview */}
+                                <div className="mb-4 py-2 px-3 rounded-xl bg-surface-variant/50 border border-outline-variant/60 flex items-center justify-between text-xs">
+                                    <span className="text-on-surface-variant font-medium flex items-center gap-1">
+                                        <span className="material-symbols-outlined text-[16px] text-emerald-600">storefront</span>
+                                        Ketersediaan:
+                                    </span>
+                                    <span className="font-bold text-primary">
+                                        Pusat ({product.centralStock}) • {product.branchAvailability.filter(b => b.stock > 0).length} Cabang Ready
+                                    </span>
+                                </div>
+
                                 <div className="flex justify-between items-center pt-4 border-t border-outline-variant/60">
                                     <span className="text-primary font-bold text-xl">{product.price}</span>
-                                    <a
-                                        href="#booking"
-                                        className="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-bold text-xs uppercase tracking-wider hover:bg-primary/90 transition-all shadow-md active:scale-95"
+                                    <Link
+                                        href={`/katalog-kacamata/${product.slug}`}
+                                        className="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs uppercase tracking-wider hover:bg-primary/90 transition-all shadow-md active:scale-95 flex items-center gap-1"
                                     >
-                                        Pesan Frame
-                                    </a>
+                                        <span>Cek Stok &amp; Detail</span>
+                                        <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                                    </Link>
                                 </div>
                             </div>
                         </ScrollCard>
                     ))}
                 </div>
             ) : (
-                /* Empty State */
                 <div className="text-center py-20 bg-surface rounded-3xl border border-outline-variant">
                     <span className="material-symbols-outlined text-5xl text-on-surface-variant/50 mb-3 block">
                         search_off
@@ -360,10 +464,9 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                 </div>
             )}
 
-            {/* Pagination Controls (Only on full catalog page) */}
+            {/* Pagination Controls */}
             {!isHomePreview && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-14">
-                    {/* Previous Button */}
                     <button
                         onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
@@ -373,7 +476,6 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                         <span className="material-symbols-outlined">chevron_left</span>
                     </button>
 
-                    {/* Page Number Buttons */}
                     {[...Array(totalPages)].map((_, i) => {
                         const pageNum = i + 1;
                         return (
@@ -392,7 +494,6 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
                         );
                     })}
 
-                    {/* Next Button */}
                     <button
                         onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                         disabled={currentPage === totalPages}
@@ -408,14 +509,15 @@ export default function CatalogSection({ isHomePreview = false }: CatalogSection
             {isHomePreview && (
                 <div className="text-center mt-12">
                     <Link
-                        href="/katalog-kacamataa"
+                        href="/katalog-kacamata"
                         className="inline-flex items-center gap-3 bg-surface border-2 border-primary text-primary hover:bg-primary hover:text-on-primary px-8 py-4 rounded-2xl font-bold text-base transition-all shadow-md active:scale-95"
                     >
-                        <span>Lihat 12+ Katalog Kacamata Lainnya</span>
+                        <span>Lihat Semua Katalog Kacamata &amp; Cek Stok</span>
                         <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                     </Link>
                 </div>
             )}
+            {/* PRODUCT DETAIL NOW IN DEDICATED PAGE /katalog-kacamata/{slug} */}
         </section>
     );
 }
