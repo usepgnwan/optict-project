@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import {
     ShinyText,
     BlurText,
@@ -39,14 +40,20 @@ export default function HeroSection() {
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Magnet padding={40}>
-                        <button className="w-full sm:w-auto bg-primary text-on-primary px-10 py-4 rounded-xl font-bold shadow-xl shadow-primary/20 hover:shadow-2xl hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer">
+                        <Link
+                            href="/booking"
+                            className="inline-block w-full sm:w-auto bg-primary text-on-primary px-10 py-4 rounded-xl font-bold shadow-xl shadow-primary/20 hover:shadow-2xl hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer text-center"
+                        >
                             Reservasi Sekarang
-                        </button>
+                        </Link>
                     </Magnet>
                     <Magnet padding={40}>
-                        <button className="w-full sm:w-auto border-2 border-primary/10 text-primary px-10 py-4 rounded-xl font-bold hover:bg-primary/5 transition-all active:scale-95 cursor-pointer">
+                        <Link
+                            href="/katalog-kacamata"
+                            className="inline-block w-full sm:w-auto border-2 border-primary/10 text-primary px-10 py-4 rounded-xl font-bold hover:bg-primary/5 transition-all active:scale-95 cursor-pointer text-center"
+                        >
                             Lihat Katalog
-                        </button>
+                        </Link>
                     </Magnet>
                 </div>
 

@@ -24,10 +24,22 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             ],
         },
         {
+            category: 'KASIR & RESERVASI',
+            items: [
+                { name: 'POS Kasir (Point of Sale)', href: route('pos.index'), icon: 'point_of_sale', active: currentRoute.startsWith('pos.index') },
+                { name: 'Reservasi Cabang', href: route('reservations.index'), icon: 'event', active: currentRoute.startsWith('reservations.') },
+                { name: 'POS Analytics Dashboard', href: route('pos.dashboard'), icon: 'leaderboard', active: currentRoute.startsWith('pos.dashboard') },
+            ],
+        },
+        {
             category: 'MASTER DATA',
             items: [
                 { name: 'Cabang Optik', href: route('branches.index'), icon: 'storefront', active: currentRoute.startsWith('branches.') },
                 { name: 'Katalog Produk', href: route('products.index'), icon: 'eyeglasses', active: currentRoute.startsWith('products.') },
+                { name: 'Layanan Optik', href: route('services.index'), icon: 'medical_services', active: currentRoute.startsWith('services.') },
+                { name: 'Kategori Layanan', href: route('service-categories.index'), icon: 'category', active: currentRoute.startsWith('service-categories.') },
+                { name: 'Tipe Keluhan', href: route('complaint-types.index'), icon: 'clinical_notes', active: currentRoute.startsWith('complaint-types.') },
+                { name: 'Data Pelanggan', href: route('customers.index'), icon: 'groups', active: currentRoute.startsWith('customers.') },
             ],
         },
         {
@@ -76,13 +88,13 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                 } w-64 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 {/* Brand Logo Header */}
-                <div className={`p-6 border-b border-outline-variant/60 flex items-center ${isCollapsed ? 'lg:justify-center' : 'gap-3'} transition-all`}>
-                    <Link href="/" className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary font-bold text-xl shadow-md shrink-0">
-                        O
+                <div className={`p-5 border-b border-outline-variant/60 flex items-center ${isCollapsed ? 'lg:justify-center' : 'gap-3'} transition-all`}>
+                    <Link href="/" className="shrink-0">
+                        <img src="/logo.png" alt="Harmoni Logo" className="h-9 w-auto object-contain" />
                     </Link>
                     <div className={`${isCollapsed ? 'lg:hidden' : 'block'}`}>
-                        <span className="font-bold text-lg text-primary tracking-tight block leading-tight">
-                            Optik Calm
+                        <span className="font-bold text-base text-primary tracking-tight block leading-tight">
+                            Phoenix Sehat
                         </span>
                         <span className="text-[10px] uppercase font-semibold text-secondary tracking-widest block">
                             Admin Panel

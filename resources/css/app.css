@@ -3,12 +3,12 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --color-primary: #1A3A5F;
+    --color-primary: #0D9488;
     --color-on-primary: #ffffff;
-    --color-secondary: #769382;
+    --color-secondary: #0F766E;
     --color-on-secondary: #ffffff;
-    --color-tertiary: #E8F3F1;
-    --color-on-tertiary: #1A3A5F;
+    --color-tertiary: #CCFBF1;
+    --color-on-tertiary: #0F766E;
     --color-background: #F9FAFB;
     --color-on-background: #1F2937;
     --color-surface: #ffffff;
@@ -22,12 +22,12 @@
 }
 
 .dark {
-    --color-primary: #60A5FA;
-    --color-on-primary: #0F172A;
-    --color-secondary: #8DAFA0;
-    --color-on-secondary: #0D1612;
-    --color-tertiary: #1E293B;
-    --color-on-tertiary: #E2E8F0;
+    --color-primary: #14B8A6;
+    --color-on-primary: #042F2E;
+    --color-secondary: #2DD4BF;
+    --color-on-secondary: #042F2E;
+    --color-tertiary: #134E4A;
+    --color-on-tertiary: #CCFBF1;
     --color-background: #0B111E;
     --color-on-background: #F1F5F9;
     --color-surface: #111C2E;
@@ -94,7 +94,7 @@
 }
 .pagination-dot.active {
     width: 24px;
-    background-color: #1A3A5F;
+    background-color: #0D9488;
 }
 
 /* Infinite Marquee Loop */
