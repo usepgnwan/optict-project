@@ -11,7 +11,6 @@ import CtaSection from '@/Components/Home/CtaSection';
 import StatsSection from '@/Components/Home/StatsSection';
 import TestimonialsSection from '@/Components/Home/TestimonialsSection';
 import BranchDirectorySection from '@/Components/Home/BranchDirectorySection';
-import BookingFormSection from '@/Components/Home/BookingFormSection';
 import FaqSection from '@/Components/Home/FaqSection';
 
 export default function Home({ dbProducts = [], branches = [] }: { dbProducts?: any[]; branches?: any[] }) {
@@ -21,15 +20,14 @@ export default function Home({ dbProducts = [], branches = [] }: { dbProducts?: 
             <AboutSection />
             <ComplaintsSection />
             <ProcessSection />
-            <LocationsSection />
+            <LocationsSection branches={branches} />
             <ServicesSection />
             <CatalogSection isHomePreview={true} dbProducts={dbProducts} branches={branches} />
             <AffiliateSection />
             <CtaSection />
             <StatsSection />
             <TestimonialsSection />
-            <BranchDirectorySection />
-            <BookingFormSection />
+            <BranchDirectorySection branches={branches} />
             <FaqSection />
         </HomeLayout>
     );

@@ -17,13 +17,10 @@ export default function Guest({ children }: PropsWithChildren) {
                         href="/"
                         className="group relative inline-flex items-center justify-center mb-3 focus:outline-none"
                     >
-                        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-primary to-secondary opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-500" />
-                        <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 text-on-primary group-hover:scale-105 transition-transform duration-300">
-                            <ApplicationLogo className="w-10 h-10 fill-current text-on-primary" />
-                        </div>
+                        <img src="/logo.png" alt="Harmoni by Phoenix Sehat Logo" className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
                     </Link>
                     <Link href="/" className="text-xl sm:text-2xl font-extrabold tracking-tight text-on-surface hover:text-primary transition-colors">
-                        Optik Calm
+                        Harmoni by Phoenix Sehat
                     </Link>
                 </div>
 
@@ -35,7 +32,7 @@ export default function Guest({ children }: PropsWithChildren) {
             </div>
 
             <footer className="relative z-10 py-6 text-center text-xs text-on-surface-variant/80">
-                <p>© {new Date().getFullYear()} Optik Calm • Pelayanan Kesehatan Mata Terpercaya</p>
+                <p>© {new Date().getFullYear()} Harmoni by Phoenix Sehat • Enhance Your Vision</p>
             </footer>
         </div>
     );

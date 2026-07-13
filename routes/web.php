@@ -19,7 +19,21 @@ Route::get('/', function () {
     return Inertia::render('Home', [
         'dbProducts' => \App\Models\Product::active()->with(['centralInventory', 'branchInventories.branch'])->get(),
         'branches' => \App\Models\Branch::active()->get(),
+        'complaintTypes' => \App\Models\ComplaintType::active()->ordered()->get(),
     ]);
+});
+
+Route::get('/booking', function () {
+    return Inertia::render('Booking', [
+        'branches' => \App\Models\Branch::active()->get(),
+        'complaintTypes' => \App\Models\ComplaintType::active()->ordered()->get(),
+    ]);
+})->name('booking');
+
+Route::post('/booking', [\App\Http\Controllers\BookingSubmissionController::class, 'store'])->name('booking.store');
+
+Route::get('/reservasi', function () {
+    return redirect('/booking');
 });
 
 Route::get('/katalog-kacamata', function () {
@@ -81,6 +95,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User Management
     Route::resource('users', UserManagementController::class)->except(['create', 'edit', 'show']);
+
+    // Reservation & POS Module Routes
+    Route::resource('service-categories', \App\Http\Controllers\ServiceCategoryController::class);
+    Route::resource('services', \App\Http\Controllers\ServiceMasterController::class);
+    Route::resource('customers', \App\Http\Controllers\CustomerController::class);
+    Route::get('/api/customers/search', [\App\Http\Controllers\CustomerController::class, 'search'])->name('customers.search');
+
+    Route::resource('complaint-types', \App\Http\Controllers\ComplaintTypeController::class);
+    Route::resource('reservations', \App\Http\Controllers\ReservationController::class);
+    Route::post('/reservations/{reservation}/status', [\App\Http\Controllers\ReservationController::class, 'updateStatus'])->name('reservations.status');
+
+    Route::get('/pos', [\App\Http\Controllers\POSController::class, 'index'])->name('pos.index');
+    Route::post('/pos/checkout', [\App\Http\Controllers\POSController::class, 'checkout'])->name('pos.checkout');
+    Route::post('/pos/sales/{sale}/void', [\App\Http\Controllers\POSController::class, 'voidSale'])->name('pos.void');
+    Route::get('/pos/dashboard', [\App\Http\Controllers\POSDashboardController::class, 'index'])->name('pos.dashboard');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

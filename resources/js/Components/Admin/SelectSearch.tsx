@@ -96,11 +96,9 @@ export default function SelectSearch({
         <div ref={containerRef} className={`relative inline-block w-full text-left ${className}`}>
             <div
                 onClick={() => !disabled && setIsOpen(!isOpen)}
-                className={`flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border ${
-                    isOpen ? 'border-primary ring-2 ring-primary/20' : 'border-outline-variant/60'
-                } text-sm transition-all select-none ${
-                    disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-outline'
-                }`}
+                className={`flex items-center justify-between w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border ${isOpen ? 'border-primary ring-2 ring-primary/20' : 'border-outline-variant/60'
+                    } text-sm transition-all select-none ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-outline'
+                    }`}
             >
                 <span className={`block truncate ${selectedOption ? 'text-on-surface font-medium' : 'text-on-surface-variant'}`}>
                     {selectedOption ? selectedOption.label : placeholder}
@@ -148,11 +146,10 @@ export default function SelectSearch({
                                     <div
                                         key={`${opt.value}-${idx}`}
                                         onClick={() => handleSelect(opt.value)}
-                                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
-                                            isSelected
+                                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium cursor-pointer transition-colors ${isSelected
                                                 ? 'bg-primary text-on-primary font-bold'
                                                 : 'text-on-surface hover:bg-tertiary/40'
-                                        }`}
+                                            }`}
                                     >
                                         <span className="truncate">{opt.label}</span>
                                         {isSelected && (

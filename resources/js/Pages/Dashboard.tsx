@@ -21,8 +21,8 @@ export default function Dashboard() {
     ];
 
     return (
-        <AdminLayout title="Dashboard | Optik Calm Admin">
-            <Head title="Dashboard | Optik Calm Admin" />
+        <AdminLayout title="Dashboard | Harmoni by Phoenix Sehat">
+            <Head title="Dashboard | Harmoni by Phoenix Sehat" />
 
             {/* Top Page Title & Filter Row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">

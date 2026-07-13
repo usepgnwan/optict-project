@@ -63,7 +63,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                 lensType: formatLensType(targetDb.lens_type),
                 price: `Rp ${Number(targetDb.selling_price || 0).toLocaleString('id-ID')}`,
                 priceValue: Number(targetDb.selling_price || 0),
-                image: targetDb.image_url || (targetDb.image_path ? `/storage/${targetDb.image_path}` : 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeWPF_of7nlKq-1AibDLuWcUstIxVEs7BG3rsc5Ojb8rJ0Y1CetJUtW5xvKg8CvFPaHnmIdhXM4SLWttp6lg5tQINjiSsN5Vc0B5xpIRwiiThiRz-zC-GFj5mLkM_rKXFbTc_VPmxNm-J5iqiGPubB3H5nxWvqj1WRZNvFtCmpYQmJdwr-wIrkHjy9sKtrBxJXtkzztnjf21d-1TK74gCdQDdSm9cmBHLEcaU2jp3qH3uyPiUeLfRl-DI2y_IDnfBFcDrQiHU2Diw'),
+                image: targetDb.image_path ? `/storage/${targetDb.image_path}` : (targetDb.image_url || null),
                 description: targetDb.description || 'Bingkai kacamata presisi tinggi standar optikal Optik Calm.',
                 centralStock: targetDb.central_inventory?.quantity ?? 0,
                 branchAvailability: defaultBranches.length > 0 ? defaultBranches : [
@@ -169,11 +169,21 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                     {/* Left Column: Image Card */}
                     <div className="lg:col-span-6 bg-surface rounded-3xl border border-outline-variant p-8 sm:p-12 shadow-lg relative overflow-hidden flex items-center justify-center min-h-[420px]">
                         <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-tertiary/20 pointer-events-none" />
-                        <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-full max-h-80 object-contain drop-shadow-xl transition-transform duration-500 hover:scale-105"
-                        />
+                        {product.image ? (
+                            <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full max-h-80 object-contain drop-shadow-xl transition-transform duration-500 hover:scale-105"
+                            />
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-on-surface-variant/50 gap-3 py-16">
+                                <div className="w-24 h-24 rounded-3xl bg-surface-variant/80 border border-outline-variant flex items-center justify-center shadow-inner">
+                                    <span className="material-symbols-outlined text-5xl text-on-surface-variant/60">image_not_supported</span>
+                                </div>
+                                <span className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/80">Foto Produk Belum Tersedia</span>
+                                <span className="text-xs text-on-surface-variant/60 text-center max-w-xs">Silakan hubungi admin atau datang ke cabang untuk melihat fisik produk.</span>
+                            </div>
+                        )}
                         <span className="absolute top-6 left-6 px-4 py-1.5 rounded-full bg-primary text-on-primary font-extrabold text-xs tracking-widest uppercase shadow-md">
                             {product.category}
                         </span>

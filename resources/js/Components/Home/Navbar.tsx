@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { useDarkMode } from '@/Hooks/useDarkMode';
 
 export default function Navbar() {
     const { isDark, toggleDarkMode } = useDarkMode();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { url } = usePage();
+
+    const isCatalogActive = url.startsWith('/katalog-kacamata');
+    const isBookingActive = url.startsWith('/booking');
+    const isHomeActive = url === '/' && !isCatalogActive && !isBookingActive;
 
     const navLinks = [
-        { name: 'Home', href: '/', icon: 'home', isAnchor: false, active: true },
-        { name: 'Catalog', href: '/katalog-kacamataa', icon: 'eyeglasses', isAnchor: false, active: false },
+        { name: 'Home', href: '/', icon: 'home', isAnchor: false, active: isHomeActive },
+        { name: 'Catalog', href: '/katalog-kacamata', icon: 'eyeglasses', isAnchor: false, active: isCatalogActive },
+        { name: 'Booking', href: '/booking', icon: 'calendar_month', isAnchor: false, active: isBookingActive },
         { name: 'Services', href: '/#services', icon: 'medical_services', isAnchor: false, active: false },
         { name: 'Affiliate', href: '/#affiliate', icon: 'handshake', isAnchor: false, active: false },
         { name: 'Admin', href: '/dashboard', icon: 'admin_panel_settings', isAnchor: false, active: false },
@@ -20,8 +26,12 @@ export default function Navbar() {
                 <nav className="flex justify-between items-center w-full px-6 max-w-[1200px] mx-auto h-20">
                     {/* Logo & Desktop Nav Links */}
                     <div className="flex items-center gap-8">
-                        <Link href="/" className="font-semibold text-2xl md:text-[32px] leading-tight tracking-tight text-primary">
-                            Optik Calm
+                        <Link href="/" className="flex items-center gap-3 group">
+                            <img
+                                src="/logo.png"
+                                alt="Harmoni by Phoenix Sehat Logo"
+                                className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                            />
                         </Link>
 
                         {/* Desktop Menu */}
@@ -39,11 +49,10 @@ export default function Navbar() {
                                     <Link
                                         key={link.name}
                                         href={link.href}
-                                        className={`px-4 py-2 rounded-full font-medium text-sm tracking-wide transition-all ${
-                                            link.active
+                                        className={`px-4 py-2 rounded-full font-medium text-sm tracking-wide transition-all ${link.active
                                                 ? 'bg-primary text-on-primary shadow-sm'
                                                 : 'text-on-surface-variant hover:bg-surface hover:text-primary hover:shadow-sm'
-                                        }`}
+                                            }`}
                                     >
                                         {link.name}
                                     </Link>
@@ -69,17 +78,6 @@ export default function Navbar() {
                         </button>
 
                         {/* Desktop Book Appointment CTA */}
-                        <a
-                            href="#booking"
-                            className="hidden md:inline-flex items-center bg-primary text-on-primary px-6 py-2.5 rounded-full font-medium text-sm tracking-wide transition-all hover:bg-primary/90 active:scale-95 shadow-md"
-                        >
-                            Book Appointment
-                        </a>
-
-                        {/* Search Icon */}
-                        <div className="hidden sm:flex w-10 h-10 items-center justify-center rounded-full bg-outline-variant text-primary cursor-pointer hover:bg-primary hover:text-on-primary transition-all">
-                            <span className="material-symbols-outlined text-[20px]">search</span>
-                        </div>
 
                         {/* Mobile Hamburger Drawer Trigger */}
                         <button
@@ -103,20 +101,18 @@ export default function Navbar() {
 
             {/* Mobile Off-Canvas Side Drawer */}
             <aside
-                className={`fixed top-0 right-0 z-50 h-full w-[85%] max-w-sm bg-surface border-l border-outline-variant shadow-2xl flex flex-col justify-between p-6 transition-transform duration-300 lg:hidden ${
-                    mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-                }`}
+                className={`fixed top-0 right-0 z-50 h-full w-[85%] max-w-sm bg-surface border-l border-outline-variant shadow-2xl flex flex-col justify-between p-6 transition-transform duration-300 lg:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}
             >
                 {/* Drawer Header */}
                 <div>
                     <div className="flex items-center justify-between pb-6 border-b border-outline-variant mb-6">
                         <div className="flex items-center gap-2.5">
-                            <div className="w-9 h-9 rounded-xl bg-primary text-on-primary font-bold flex items-center justify-center text-lg shadow-md">
-                                O
-                            </div>
-                            <span className="font-bold text-xl text-primary tracking-tight">
-                                Optik Calm
-                            </span>
+                            <img
+                                src="/logo.png"
+                                alt="Harmoni by Phoenix Sehat Logo"
+                                className="h-9 w-auto object-contain"
+                            />
                         </div>
                         <button
                             onClick={() => setMobileMenuOpen(false)}
@@ -155,11 +151,10 @@ export default function Navbar() {
                                     key={link.name}
                                     href={link.href}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className={`flex items-center justify-between px-4 py-3.5 rounded-2xl font-semibold transition-all ${
-                                        link.active
+                                    className={`flex items-center justify-between px-4 py-3.5 rounded-2xl font-semibold transition-all ${link.active
                                             ? 'bg-primary text-on-primary shadow-md'
                                             : 'text-on-surface hover:bg-tertiary/40 hover:text-primary'
-                                    }`}
+                                        }`}
                                 >
                                     <div className="flex items-center gap-3.5">
                                         <span className="material-symbols-outlined text-[22px]">
@@ -198,14 +193,14 @@ export default function Navbar() {
                         </button>
                     </div>
 
-                    <a
-                        href="#booking"
+                    <Link
+                        href="/booking"
                         onClick={() => setMobileMenuOpen(false)}
                         className="w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-4 rounded-2xl font-bold text-base shadow-xl hover:bg-primary/95 transition-all"
                     >
                         <span className="material-symbols-outlined text-[20px]">calendar_month</span>
                         Book Appointment
-                    </a>
+                    </Link>
                 </div>
             </aside>
         </>

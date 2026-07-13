@@ -31,7 +31,7 @@ export default function Login({
 
     return (
         <div className="min-h-screen relative flex flex-col justify-between bg-background text-on-background selection:bg-primary selection:text-on-primary overflow-x-hidden font-sans transition-colors duration-500">
-            <Head title="Masuk ke Akun - Optik Calm" />
+            <Head title="Masuk ke Akun - Harmoni by Phoenix Sehat" />
 
             {/* Background Ambient Decorative Elements */}
             <div className="absolute inset-0 dotted-bg opacity-35 dark:opacity-20 pointer-events-none" />
@@ -75,28 +75,22 @@ export default function Login({
                         {/* Top Gradient Decorative Accent Bar */}
                         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-secondary to-primary" />
 
-                        {/* Centered Logo & Branding Header ("Logo di Tengah") */}
+                        {/* Centered Logo & Branding Header */}
                         <div className="flex flex-col items-center text-center mb-8">
                             <Link
                                 href="/"
-                                className="group relative inline-flex items-center justify-center mb-5 focus:outline-none"
-                                aria-label="Beranda Optik Calm"
+                                className="group relative inline-flex items-center justify-center mb-4 focus:outline-none"
+                                aria-label="Beranda Harmoni by Phoenix Sehat"
                             >
-                                {/* Glowing halo around logo */}
-                                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-primary to-secondary opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-500" />
-
-                                {/* Logo Icon Badge */}
-                                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 text-on-primary group-hover:scale-105 transition-transform duration-300">
-                                    <ApplicationLogo className="w-10 h-10 fill-current text-on-primary" />
-                                </div>
+                                <img src="/logo.png" alt="Harmoni by Phoenix Sehat Logo" className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
                             </Link>
 
-                            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-on-surface">
-                                Optik Calm
+                            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-on-surface">
+                                Harmoni by Phoenix Sehat
                             </h1>
 
                             <p className="mt-2 text-sm text-on-surface-variant max-w-xs leading-relaxed">
-                                Selamat datang kembali! Masuk ke akun Anda untuk mengelola pesanan & janji temu.
+                                Layanan kesehatan mata premium yang menghadirkan solusi penglihatan komprehensif.
                             </p>
                         </div>
 
@@ -250,9 +244,8 @@ export default function Login({
                 </div>
             </main>
 
-            {/* Footer */}
             <footer className="relative z-10 py-6 text-center text-xs text-on-surface-variant/80">
-                <p>© {new Date().getFullYear()} Optik Calm • Pelayanan Kesehatan Mata Modern & Terpercaya</p>
+                <p>© {new Date().getFullYear()} Harmoni by Phoenix Sehat • Enhance Your Vision</p>
             </footer>
         </div>
     );

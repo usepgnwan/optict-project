@@ -29,7 +29,7 @@ interface ProductItem {
     price: string;
     priceValue: number;
     badge: { text: string; color: string } | null;
-    image: string;
+    image: string | null;
     description: string;
     centralStock: number;
     branchAvailability: BranchAvailability[];
@@ -157,7 +157,7 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
 
     // Merge database products with showcase products
     const allProducts = useMemo<ProductItem[]>(() => {
-        const formattedDb: ProductItem[] = (dbProducts || []).map((p: any) => {
+        const formattedDb: ProductItem[] = (dbProducts || []).map((p: any, idx: number) => {
             const defaultBranches = (branches || []).map((b: any) => {
                 const inv = (p.branch_inventories || []).find((bi: any) => bi.branch_id === b.id);
                 return {
@@ -183,6 +183,10 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                 return type || 'Single Vision';
             };
 
+            const resolvedImage = p.image_path
+                ? `/storage/${p.image_path}`
+                : (p.image_url || null);
+
             return {
                 id: p.id,
                 slug: toSlug(p.name),
@@ -196,7 +200,7 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                 price: `Rp ${Number(p.selling_price || 0).toLocaleString('id-ID')}`,
                 priceValue: Number(p.selling_price || 0),
                 badge: { text: p.category?.toUpperCase() || 'FRAME', color: 'bg-primary text-on-primary' },
-                image: p.image_url || p.image_path ? (p.image_url || `/storage/${p.image_path}`) : defaultProducts[0].image,
+                image: resolvedImage,
                 description: p.description || 'Bingkai kacamata presisi tinggi standar optikal Optik Calm.',
                 centralStock: p.central_inventory?.quantity ?? 0,
                 branchAvailability: defaultBranches.length > 0 ? defaultBranches : defaultProducts[0].branchAvailability,
@@ -383,11 +387,20 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                                 href={`/katalog-kacamata/${product.slug}`}
                                 className="h-64 bg-tertiary/40 flex items-center justify-center p-8 relative overflow-hidden block group-hover:bg-tertiary/60 transition-colors"
                             >
-                                <img
-                                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
-                                    src={product.image}
-                                    alt={product.name}
-                                />
+                                {product.image ? (
+                                    <img
+                                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                                        src={product.image}
+                                        alt={product.name}
+                                    />
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center text-on-surface-variant/50 gap-2 h-full">
+                                        <div className="w-16 h-16 rounded-2xl bg-surface-variant/80 border border-outline-variant flex items-center justify-center shadow-inner">
+                                            <span className="material-symbols-outlined text-3xl text-on-surface-variant/60">image_not_supported</span>
+                                        </div>
+                                        <span className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant/70">Foto Belum Tersedia</span>
+                                    </div>
+                                )}
                                 {product.badge && (
                                     <span className={`absolute top-4 left-4 ${product.badge.color} text-[10px] uppercase tracking-[0.15em] px-3.5 py-1.5 rounded-full font-bold shadow-md`}>
                                         {product.badge.text}
