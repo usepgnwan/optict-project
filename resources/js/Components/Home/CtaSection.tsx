@@ -24,9 +24,9 @@ export default function CtaSection() {
                 <div className="flex-1 relative min-h-[350px] md:min-h-full">
                     <div className="absolute inset-0 z-10 bg-gradient-to-r from-surface via-transparent to-transparent" />
                     <img
-                        alt="Optic Calm Examination Service"
+                        alt="Pemeriksaan Mata & Tes Kacamata Harmoni"
                         className="w-full h-full object-cover"
-                        src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80"
+                        src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?auto=format&fit=crop&w=1200&q=80"
                     />
                 </div>
             </div>
