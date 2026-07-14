@@ -155,7 +155,7 @@ export default function UsersIndex({ users, roles, branches, filters }: UsersPag
 
     return (
         <AdminLayout>
-            <Head title="Manajemen User & Role - Optik Calm" />
+            <Head title="Manajemen User & Role - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Manajemen Pengguna & Role (RBAC)"

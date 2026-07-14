@@ -186,7 +186,7 @@ export default function ServicesIndex({ services, categories, filters }: Service
 
     return (
         <AdminLayout>
-            <Head title="Master Layanan - Optik Calm" />
+            <Head title="Master Layanan - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Master Layanan Optik"

@@ -23,7 +23,7 @@ export default function OpnamesCreate({ branches }: OpnamesCreateProps) {
 
     return (
         <AdminLayout>
-            <Head title="Buat Sesi Opname - Optik Calm" />
+            <Head title="Buat Sesi Opname - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link

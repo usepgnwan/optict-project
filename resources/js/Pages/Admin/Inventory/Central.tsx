@@ -92,7 +92,7 @@ export default function CentralInventoryPage({ inventories, filters, categories 
 
     return (
         <AdminLayout>
-            <Head title="Gudang Pusat - Optik Calm" />
+            <Head title="Gudang Pusat - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Stok Gudang Pusat (Central Warehouse)"

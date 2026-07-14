@@ -28,7 +28,7 @@ export default function AdjustmentsCreate({ branches, products, reasons }: Adjus
 
     return (
         <AdminLayout>
-            <Head title="Catat Penyesuaian Stok - Optik Calm" />
+            <Head title="Catat Penyesuaian Stok - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link

@@ -146,7 +146,7 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
 
     return (
         <AdminLayout>
-            <Head title="Master Tipe Keluhan - Optik Calm" />
+            <Head title="Master Tipe Keluhan - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Master Tipe Keluhan / Kebutuhan"

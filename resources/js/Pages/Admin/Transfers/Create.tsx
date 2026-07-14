@@ -57,7 +57,7 @@ export default function TransfersCreate({ branches, products }: TransfersCreateP
 
     return (
         <AdminLayout>
-            <Head title="Buat Transfer Stok - Optik Calm" />
+            <Head title="Buat Transfer Stok - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link

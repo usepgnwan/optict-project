@@ -74,10 +74,9 @@ export default function BranchInventoryPage({ inventories, branches, selectedBra
             header: 'Stok Terkini',
             key: 'current_stock',
             render: (item: BranchInventory) => (
-                <span className={`font-extrabold text-base ${
-                    item.current_stock === 0 ? 'text-rose-500' :
-                    item.current_stock <= item.minimum_stock ? 'text-amber-500' : 'text-on-surface'
-                }`}>
+                <span className={`font-extrabold text-base ${item.current_stock === 0 ? 'text-rose-500' :
+                        item.current_stock <= item.minimum_stock ? 'text-amber-500' : 'text-on-surface'
+                    }`}>
                     {item.current_stock} Unit
                 </span>
             ),
@@ -106,7 +105,7 @@ export default function BranchInventoryPage({ inventories, branches, selectedBra
 
     return (
         <AdminLayout>
-            <Head title="Stok Cabang - Optik Calm" />
+            <Head title="Stok Cabang - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Stok Inventori Cabang"

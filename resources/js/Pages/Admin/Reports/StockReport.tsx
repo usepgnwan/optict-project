@@ -71,7 +71,7 @@ export default function StockReport({ central, branch }: StockReportProps) {
 
     return (
         <AdminLayout>
-            <Head title="Laporan Stok - Optik Calm" />
+            <Head title="Laporan Stok - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link

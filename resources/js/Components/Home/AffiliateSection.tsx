@@ -10,7 +10,7 @@ const benefits = [
     {
         icon: 'monitoring',
         title: 'Dashboard Transparan',
-        description: 'Pantau klik, prospek, pencairan dana, dan riwayat komisi secara real-time langsung melalui akun khusus Mitra Affiliate Optik Calm.',
+        description: 'Pantau klik, prospek, pencairan dana, dan riwayat komisi secara real-time langsung melalui akun khusus Mitra Affiliate Harmoni by Phoeinx Sehat.',
     },
     {
         icon: 'auto_awesome',
@@ -30,7 +30,7 @@ export default function AffiliateSection() {
                     <div className="max-w-3xl mx-auto text-center mb-14 relative z-10">
                         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-bold text-xs uppercase tracking-widest mb-4">
                             <span className="material-symbols-outlined text-[16px]">handshake</span>
-                            Program Mitra Optik Calm
+                            Program Mitra Harmoni by Phoeinx Sehat
                         </span>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-primary tracking-tight leading-tight mb-4">
                             Gabung Menjadi Mitra Affiliate &amp; Dapatkan Komisi Pasif
@@ -68,10 +68,8 @@ export default function AffiliateSection() {
                             <p className="text-sm text-on-primary/80">Pendaftaran cepat dalam 2 menit, persetujuan otomatis.</p>
                         </div>
                         <a
-                            href="https://wa.me/6281234567890?text=Halo%20Optik%20Calm,%20saya%20tertarik%20mendaftar%20Program%20Mitra%20Affiliate"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-8 py-4 bg-secondary text-white font-bold rounded-2xl shadow-lg hover:bg-secondary/90 transition-all hover:scale-105 shrink-0"
+                            href="/affiliate#pendaftaran"
+                            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-surface text-primary font-bold shadow-lg shadow-surface/20 hover:bg-surface/90 transition-all hover:-translate-y-1 active:scale-95 shrink-0"
                         >
                             Daftar Jadi Affiliate Sekarang
                         </a>

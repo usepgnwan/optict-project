@@ -314,7 +314,7 @@ export default function ProductsIndex({ products, filters, categories }: Product
 
     return (
         <AdminLayout>
-            <Head title="Katalog Produk - Optik Calm" />
+            <Head title="Katalog Produk - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Katalog Produk Kacamata & Lensa"

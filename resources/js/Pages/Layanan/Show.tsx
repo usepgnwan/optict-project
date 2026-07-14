@@ -18,7 +18,7 @@ interface LayananShowProps {
 
 export default function LayananShow({ service, otherServices }: LayananShowProps) {
     return (
-        <HomeLayout title={`${service.title} | Layanan Spesialis Optik Calm`}>
+        <HomeLayout title={`${service.title} | Layanan Spesialis Harmoni by Phoeinx Sehat`}>
             {/* Page Header */}
             <div className="bg-tertiary/20 border-b border-outline-variant py-10">
                 <div className="max-w-[1200px] mx-auto px-6">

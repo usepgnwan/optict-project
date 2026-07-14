@@ -96,7 +96,7 @@ export default function MovementReport({ movements, filters, types }: MovementRe
 
     return (
         <AdminLayout>
-            <Head title="Laporan Mutasi Stok - Optik Calm" />
+            <Head title="Laporan Mutasi Stok - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link
@@ -116,7 +116,7 @@ export default function MovementReport({ movements, filters, types }: MovementRe
 
             <SearchFilter
                 search=""
-                onSearchChange={() => {}}
+                onSearchChange={() => { }}
                 placeholder="Filter tipe mutasi..."
             >
                 <select

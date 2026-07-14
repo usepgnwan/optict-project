@@ -49,6 +49,10 @@ Route::get('/katalog-kacamata', function () {
 Route::get('/layanan', [\App\Http\Controllers\SpecialistServiceController::class, 'publicIndex'])->name('layanan.index');
 Route::get('/layanan/{slug}', [\App\Http\Controllers\SpecialistServiceController::class, 'publicShow'])->name('layanan.show');
 
+Route::get('/affiliate', function () {
+    return Inertia::render('Affiliate');
+})->name('affiliate');
+
 Route::get('/katalog-kacamata/{slug}', function ($slug) {
     $products = \App\Models\Product::active()->with(['centralInventory', 'branchInventories.branch'])->get();
     $dbProduct = $products->first(function ($p) use ($slug) {

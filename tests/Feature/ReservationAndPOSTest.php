@@ -64,7 +64,7 @@ class ReservationAndPOSTest extends TestCase
     {
         $user = User::factory()->create();
         $branch = Branch::create([
-            'name' => 'Optik Calm Pusat',
+            'name' => 'Harmoni by Phoeinx Sehat Pusat',
             'address' => 'Jl. Sudirman 1',
             'city' => 'Jakarta',
             'phone' => '021-111111',

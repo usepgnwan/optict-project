@@ -22,7 +22,7 @@ export default function LayananIndex({ services }: LayananIndexProps) {
     };
 
     return (
-        <HomeLayout title="Layanan Spesialis Kami | Optik Calm">
+        <HomeLayout title="Layanan Spesialis Kami | Harmoni by Phoeinx Sehat">
             {/* Page Header */}
             <div className="bg-tertiary/20 border-b border-outline-variant py-14">
                 <div className="max-w-[1200px] mx-auto px-6">
@@ -38,7 +38,7 @@ export default function LayananIndex({ services }: LayananIndexProps) {
                         Artikel & Informasi
                     </h1>
                     <p className="text-on-surface-variant text-lg max-w-2xl">
-                        Kumpulan artikel, tips kesehatan mata, dan informasi layanan terbaru dari Optik Calm.
+                        Kumpulan artikel, tips kesehatan mata, dan informasi layanan terbaru dari Harmoni by Phoeinx Sehat.
                     </p>
                 </div>
             </div>

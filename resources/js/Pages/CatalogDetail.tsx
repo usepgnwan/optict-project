@@ -57,18 +57,18 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                 name: targetDb.name,
                 category: targetDb.category ? targetDb.category.toUpperCase() : 'FRAME',
                 sku: targetDb.sku || `SKU-${targetDb.id}`,
-                brand: targetDb.brand || 'Optik Calm',
+                brand: targetDb.brand || 'Harmoni by Phoeinx Sehat',
                 frameType: formatFrameType(targetDb.frame_type),
                 frameColor: targetDb.frame_color || 'Standard',
                 lensType: formatLensType(targetDb.lens_type),
                 price: `Rp ${Number(targetDb.selling_price || 0).toLocaleString('id-ID')}`,
                 priceValue: Number(targetDb.selling_price || 0),
                 image: targetDb.image_path ? `/storage/${targetDb.image_path}` : (targetDb.image_url || null),
-                description: targetDb.description || 'Bingkai kacamata presisi tinggi standar optikal Optik Calm.',
+                description: targetDb.description || 'Bingkai kacamata presisi tinggi standar optikal Harmoni by Phoeinx Sehat.',
                 centralStock: targetDb.central_inventory?.quantity ?? 0,
                 branchAvailability: defaultBranches.length > 0 ? defaultBranches : [
-                    { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 0 },
-                    { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0 },
+                    { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 0 },
+                    { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0 },
                 ],
             };
         }
@@ -80,7 +80,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                 name: 'Aura Gold Classic',
                 category: 'Titanium Series',
                 sku: 'FRM-AURA-01',
-                brand: 'Optik Calm Titanium',
+                brand: 'Harmoni by Phoeinx Sehat Titanium',
                 frameType: 'Full Frame',
                 frameColor: 'Gold Matte',
                 lensType: 'Single Vision',
@@ -89,8 +89,8 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                 description: 'Bingkai berbahan titanium murni yang sangat ringan, anti-karat, serta hipoalergenik untuk kenyamanan maksimal sepanjang hari.',
                 centralStock: 24,
                 branchAvailability: [
-                    { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8 },
-                    { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5 },
+                    { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8 },
+                    { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5 },
                 ],
             },
         ];
@@ -100,7 +100,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
 
     if (!product) {
         return (
-            <HomeLayout title="Katalog Tidak Ditemukan | Optik Calm">
+            <HomeLayout title="Katalog Tidak Ditemukan | Harmoni by Phoeinx Sehat">
                 <div className="max-w-[1200px] mx-auto px-6 py-24 text-center">
                     <span className="material-symbols-outlined text-6xl text-on-surface-variant/40 mb-4 block">
                         find_in_page
@@ -133,7 +133,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
         : '#';
 
     return (
-        <HomeLayout title={`${product.name} - Katalog & Stok | Optik Calm`}>
+        <HomeLayout title={`${product.name} - Katalog & Stok | Harmoni by Phoeinx Sehat`}>
             {/* Page Header Banner */}
             <div className="bg-tertiary/20 border-b border-outline-variant py-10">
                 <div className="max-w-[1200px] mx-auto px-6">
@@ -261,7 +261,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                                     onChange={(e) => setSelectedBranchId(Number(e.target.value) || '')}
                                     className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 >
-                                    <option value="">-- Pilih Cabang Optik Calm --</option>
+                                    <option value="">-- Pilih Cabang Harmoni by Phoeinx Sehat --</option>
                                     {product.branchAvailability.map((branch: any) => (
                                         <option key={branch.branchId} value={branch.branchId}>
                                             {branch.branchName} {branch.stock > 0 ? `(Ready: ${branch.stock})` : '(Stok Habis)'}
@@ -313,7 +313,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                                 Cek Stok Real-Time di Seluruh Lokasi
                             </h2>
                             <p className="text-sm text-on-surface-variant mt-1">
-                                Informasi persediaan diperbarui secara live dari sistem database inventori Optik Calm.
+                                Informasi persediaan diperbarui secara live dari sistem database inventori Harmoni by Phoeinx Sehat.
                             </p>
                         </div>
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold text-xs self-start sm:self-center">
@@ -330,7 +330,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                             </div>
                             <div>
                                 <h4 className="font-extrabold text-base text-on-surface">Gudang Pusat (Central Warehouse)</h4>
-                                <p className="text-xs text-on-surface-variant">Pusat Distribusi Utama Optik Calm Indonesia</p>
+                                <p className="text-xs text-on-surface-variant">Pusat Distribusi Utama Harmoni by Phoeinx Sehat Indonesia</p>
                             </div>
                         </div>
                         <div>
@@ -350,7 +350,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                     {/* Branches Grid */}
                     <div className="space-y-4">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                            Ketersediaan di Cabang Resmi Optik Calm
+                            Ketersediaan di Cabang Resmi Harmoni by Phoeinx Sehat
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                             {product.branchAvailability.map((branch: any) => (

@@ -141,7 +141,7 @@ export default function FaqsIndex({ faqs, filters }: FaqsPageProps) {
 
     return (
         <AdminLayout>
-            <Head title="Master FAQ - Optik Calm" />
+            <Head title="Master FAQ - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Master Pertanyaan Umum (FAQ)"

@@ -37,7 +37,7 @@ export default function ReportsIndex() {
 
     return (
         <AdminLayout>
-            <Head title="Pusat Laporan & Analitik - Optik Calm" />
+            <Head title="Pusat Laporan & Analitik - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Pusat Laporan & Analitik Stok"
