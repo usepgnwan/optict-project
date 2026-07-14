@@ -1,17 +1,18 @@
 import { useState } from 'react';
 
-const faqs = [
-    {
-        question: 'Berapa lama proses pembuatan kacamata?',
-        answer: 'Proses pembuatan kacamata rata-rata memakan waktu 1-3 hari kerja tergantung pada jenis lensa dan kompleksitas resep Anda. Untuk lensa standar, seringkali dapat selesai dalam hari yang sama.',
-    },
-    {
-        question: 'Apakah ada garansi untuk frame dan lensa?',
-        answer: 'Ya, kami memberikan garansi 6-12 bulan untuk kerusakan pabrik pada frame dan garansi kenyamanan resep selama 1 bulan. Syarat dan ketentuan berlaku untuk setiap merek tertentu.',
-    },
-];
+interface Faq {
+    id: number;
+    question: string;
+    answer: string;
+    is_active: boolean;
+    sort_order: number;
+}
 
-export default function FaqSection() {
+interface FaqSectionProps {
+    faqs?: Faq[];
+}
+
+export default function FaqSection({ faqs = [] }: FaqSectionProps) {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     const toggle = (idx: number) => {
@@ -29,26 +30,33 @@ export default function FaqSection() {
                 </p>
             </div>
             <div className="max-w-3xl mx-auto space-y-6">
-                {faqs.map((faq, idx) => (
-                    <div key={idx} className="border border-outline-variant rounded-2xl overflow-hidden card-shadow">
-                        <button
-                            className="w-full p-8 text-left flex justify-between items-center bg-white hover:bg-tertiary/20 transition-colors group"
-                            onClick={() => toggle(idx)}
-                        >
-                            <span className="font-bold text-primary text-lg group-hover:text-primary transition-colors">
-                                {faq.question}
-                            </span>
-                            <span className="material-symbols-outlined text-secondary transition-all">
-                                {openIndex === idx ? 'remove' : 'add'}
-                            </span>
-                        </button>
-                        {openIndex === idx && (
-                            <div className="p-8 bg-tertiary/10 text-on-surface-variant leading-relaxed border-t border-outline-variant">
-                                {faq.answer}
-                            </div>
-                        )}
+                {faqs.length === 0 ? (
+                    <div className="text-center py-12 text-on-surface-variant">
+                        <span className="material-symbols-outlined text-4xl mb-3 block opacity-40">quiz</span>
+                        <p className="text-sm">Belum ada FAQ yang tersedia.</p>
                     </div>
-                ))}
+                ) : (
+                    faqs.map((faq, idx) => (
+                        <div key={faq.id} className="border border-outline-variant rounded-2xl overflow-hidden card-shadow">
+                            <button
+                                className="w-full p-8 text-left flex justify-between items-center bg-white hover:bg-tertiary/20 transition-colors group"
+                                onClick={() => toggle(idx)}
+                            >
+                                <span className="font-bold text-primary text-lg group-hover:text-primary transition-colors">
+                                    {faq.question}
+                                </span>
+                                <span className="material-symbols-outlined text-secondary transition-all">
+                                    {openIndex === idx ? 'remove' : 'add'}
+                                </span>
+                            </button>
+                            {openIndex === idx && (
+                                <div className="p-8 bg-tertiary/10 text-on-surface-variant leading-relaxed border-t border-outline-variant">
+                                    {faq.answer}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
             </div>
         </section>
     );

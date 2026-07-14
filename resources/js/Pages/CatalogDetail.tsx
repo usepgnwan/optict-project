@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from '@inertiajs/react';
 import HomeLayout from '@/Layouts/HomeLayout';
 import CtaSection from '@/Components/Home/CtaSection';
@@ -122,7 +122,15 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
         );
     }
 
+    const [selectedBranchId, setSelectedBranchId] = useState<number | ''>('');
+
     const totalReadyBranches = product.branchAvailability.filter((b: any) => b.stock > 0).length;
+
+    const selectedBranch = product.branchAvailability.find((b: any) => b.branchId === selectedBranchId);
+    const isWaDisabled = !selectedBranch || selectedBranch.stock <= 0;
+    const waUrl = selectedBranch
+        ? `https://wa.me/6281234567890?text=Halo%20Optik%20Calm%20${encodeURIComponent(selectedBranch.branchName)},%20saya%20tertarik%20reservasi%20kacamata%20${encodeURIComponent(product.name)}`
+        : '#';
 
     return (
         <HomeLayout title={`${product.name} - Katalog & Stok | Optik Calm`}>
@@ -243,23 +251,53 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                         </div>
 
                         {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                            <a
-                                href="#stock-locations"
-                                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-primary text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-98"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">storefront</span>
-                                Cek Ketersediaan Stok
-                            </a>
-                            <a
-                                href={`https://wa.me/6281234567890?text=Halo%20Optik%20Calm,%20saya%20tertarik%20konsultasi/pesan%20kacamata%20${encodeURIComponent(product.name)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 border-primary bg-surface text-primary hover:bg-primary hover:text-on-primary font-bold text-sm transition-all"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">chat</span>
-                                WhatsApp
-                            </a>
+                        <div className="pt-2 space-y-3">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                                    Pilih Cabang untuk Reservasi / Tanya WA
+                                </label>
+                                <select
+                                    value={selectedBranchId}
+                                    onChange={(e) => setSelectedBranchId(Number(e.target.value) || '')}
+                                    className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                >
+                                    <option value="">-- Pilih Cabang Optik Calm --</option>
+                                    {product.branchAvailability.map((branch: any) => (
+                                        <option key={branch.branchId} value={branch.branchId}>
+                                            {branch.branchName} {branch.stock > 0 ? `(Ready: ${branch.stock})` : '(Stok Habis)'}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                                <a
+                                    href="#stock-locations"
+                                    className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-surface-variant/50 text-on-surface font-bold text-sm hover:bg-surface-variant transition-all active:scale-98 border border-outline-variant"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">storefront</span>
+                                    Cek Semua Stok
+                                </a>
+                                {isWaDisabled ? (
+                                    <button
+                                        disabled
+                                        className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-surface-variant text-on-surface-variant/50 font-bold text-sm cursor-not-allowed border border-outline-variant/50"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">chat</span>
+                                        WhatsApp
+                                    </button>
+                                ) : (
+                                    <a
+                                        href={waUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-primary text-on-primary font-bold text-sm shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-98"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">chat</span>
+                                        WhatsApp
+                                    </a>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

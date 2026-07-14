@@ -20,6 +20,8 @@ Route::get('/', function () {
         'dbProducts' => \App\Models\Product::active()->with(['centralInventory', 'branchInventories.branch'])->get(),
         'branches' => \App\Models\Branch::active()->get(),
         'complaintTypes' => \App\Models\ComplaintType::active()->ordered()->get(),
+        'faqs' => \App\Models\Faq::active()->ordered()->get(),
+        'specialistServices' => \App\Models\SpecialistService::active()->ordered()->take(4)->get(),
     ]);
 });
 
@@ -42,6 +44,10 @@ Route::get('/katalog-kacamata', function () {
         'branches' => \App\Models\Branch::active()->get(),
     ]);
 })->name('catalog');
+
+// Public Layanan Spesialis Routes
+Route::get('/layanan', [\App\Http\Controllers\SpecialistServiceController::class, 'publicIndex'])->name('layanan.index');
+Route::get('/layanan/{slug}', [\App\Http\Controllers\SpecialistServiceController::class, 'publicShow'])->name('layanan.show');
 
 Route::get('/katalog-kacamata/{slug}', function ($slug) {
     $products = \App\Models\Product::active()->with(['centralInventory', 'branchInventories.branch'])->get();
@@ -103,6 +109,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/api/customers/search', [\App\Http\Controllers\CustomerController::class, 'search'])->name('customers.search');
 
     Route::resource('complaint-types', \App\Http\Controllers\ComplaintTypeController::class);
+    Route::resource('faqs', \App\Http\Controllers\FaqController::class)->except(['create', 'edit', 'show']);
+    Route::resource('specialist-services', \App\Http\Controllers\SpecialistServiceController::class)->except(['create', 'edit', 'show']);
     Route::resource('reservations', \App\Http\Controllers\ReservationController::class);
     Route::post('/reservations/{reservation}/status', [\App\Http\Controllers\ReservationController::class, 'updateStatus'])->name('reservations.status');
 
