@@ -22,7 +22,7 @@ export default function BranchDirectorySection({ branches = [] }: { branches?: a
                 </div>
 
                 <p className="text-on-surface-variant text-base md:text-lg leading-relaxed max-w-4xl mb-8">
-                    Didukung oleh Tim Profesional Optik Calm di berbagai kota.{' '}
+                    Didukung oleh Tim Profesional Harmoni by Phoeinx Sehat di berbagai kota.{' '}
                     {dbCities.length > 0 ? (
                         <span>
                             Cabang resmi kami hadir di{' '}

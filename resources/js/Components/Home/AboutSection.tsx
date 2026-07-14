@@ -29,7 +29,7 @@ export default function AboutSection() {
                     Komitmen Kami pada Kesehatan Mata Anda
                 </h2>
                 <p className="text-on-surface-variant text-lg leading-relaxed">
-                    Di Optik Calm, kami percaya bahwa penglihatan yang baik adalah kunci kualitas hidup. Dengan tim ahli optometri berpengalaman dan peralatan diagnostik mutakhir, kami memastikan setiap pemeriksaan dilakukan dengan presisi medis.
+                    Di Harmoni by Phoeinx Sehat, kami percaya bahwa penglihatan yang baik adalah kunci kualitas hidup. Dengan tim ahli optometri berpengalaman dan peralatan diagnostik mutakhir, kami memastikan setiap pemeriksaan dilakukan dengan presisi medis.
                 </p>
                 <ul className="space-y-5">
                     {checklistItems.map((item) => (

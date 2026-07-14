@@ -442,7 +442,7 @@ export default function POSIndex({
 
     return (
         <AdminLayout>
-            <Head title="POS Kasir (Point of Sale) - Optik Calm" />
+            <Head title="POS Kasir (Point of Sale) - Harmoni by Phoeinx Sehat" />
 
             <div className="space-y-6 w-full min-w-0">
                 {/* 1. TOP TOOLBAR HEADER */}

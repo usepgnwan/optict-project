@@ -60,7 +60,7 @@ export default function POSDashboard({
 
     return (
         <AdminLayout>
-            <Head title="POS & Reservation Analytics - Optik Calm" />
+            <Head title="POS & Reservation Analytics - Harmoni by Phoeinx Sehat" />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <PageHeader

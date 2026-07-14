@@ -100,7 +100,7 @@ export default function TransfersIndex({ transfers, filters, statuses }: Transfe
 
     return (
         <AdminLayout>
-            <Head title="Daftar Transfer Stok - Optik Calm" />
+            <Head title="Daftar Transfer Stok - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Daftar Transfer Stok"
@@ -119,7 +119,7 @@ export default function TransfersIndex({ transfers, filters, statuses }: Transfe
 
             <SearchFilter
                 search=""
-                onSearchChange={() => {}}
+                onSearchChange={() => { }}
                 placeholder="Filter berdasarkan status transfer..."
             >
                 <select

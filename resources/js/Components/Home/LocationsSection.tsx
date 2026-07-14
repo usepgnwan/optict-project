@@ -12,10 +12,10 @@ export interface BranchItem {
 }
 
 const fallbackCities: BranchItem[] = [
-    { id: 1, city: 'Jakarta Pusat', name: 'Optik Calm Jakarta Pusat', address: 'Jl. MH Thamrin No. 15, Menteng, Jakarta Pusat 10350', phone: '021-3901234', email: 'jakarta@optikcalm.com' },
-    { id: 2, city: 'Bandung', name: 'Optik Calm Bandung', address: 'Jl. Braga No. 88, Sumur Bandung, Bandung 40111', phone: '022-4231234', email: 'bandung@optikcalm.com' },
-    { id: 3, city: 'Surabaya', name: 'Optik Calm Surabaya', address: 'Jl. Tunjungan No. 42, Genteng, Surabaya 60275', phone: '031-5321234', email: 'surabaya@optikcalm.com' },
-    { id: 4, city: 'Medan', name: 'Optik Calm Medan', address: 'Jl. Diponegoro No. 25, Medan Petisah 20152', phone: '061-4561234', email: 'medan@optikcalm.com' },
+    { id: 1, city: 'Jakarta Pusat', name: 'Harmoni by Phoeinx Sehat Jakarta Pusat', address: 'Jl. MH Thamrin No. 15, Menteng, Jakarta Pusat 10350', phone: '021-3901234', email: 'jakarta@optikcalm.com' },
+    { id: 2, city: 'Bandung', name: 'Harmoni by Phoeinx Sehat Bandung', address: 'Jl. Braga No. 88, Sumur Bandung, Bandung 40111', phone: '022-4231234', email: 'bandung@optikcalm.com' },
+    { id: 3, city: 'Surabaya', name: 'Harmoni by Phoeinx Sehat Surabaya', address: 'Jl. Tunjungan No. 42, Genteng, Surabaya 60275', phone: '031-5321234', email: 'surabaya@optikcalm.com' },
+    { id: 4, city: 'Medan', name: 'Harmoni by Phoeinx Sehat Medan', address: 'Jl. Diponegoro No. 25, Medan Petisah 20152', phone: '061-4561234', email: 'medan@optikcalm.com' },
 ];
 
 const studioTypes = [

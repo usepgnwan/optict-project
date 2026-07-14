@@ -11,12 +11,16 @@ export default function Navbar() {
     const isBookingActive = url.startsWith('/booking');
     const isHomeActive = url === '/' && !isCatalogActive && !isBookingActive;
 
+    const isLayananActive = url.startsWith('/layanan');
+
+    const isAffiliateActive = url.startsWith('/affiliate');
+
     const navLinks = [
         { name: 'Home', href: '/', icon: 'home', isAnchor: false, active: isHomeActive },
         { name: 'Catalog', href: '/katalog-kacamata', icon: 'eyeglasses', isAnchor: false, active: isCatalogActive },
         { name: 'Booking', href: '/booking', icon: 'calendar_month', isAnchor: false, active: isBookingActive },
-        { name: 'Services', href: '/#services', icon: 'medical_services', isAnchor: false, active: false },
-        { name: 'Affiliate', href: '/#affiliate', icon: 'handshake', isAnchor: false, active: false },
+        { name: 'Services', href: '/layanan', icon: 'medical_services', isAnchor: false, active: isLayananActive },
+        { name: 'Affiliate', href: '/affiliate', icon: 'handshake', isAnchor: false, active: isAffiliateActive },
         { name: 'Admin', href: '/dashboard', icon: 'admin_panel_settings', isAnchor: false, active: false },
     ];
 

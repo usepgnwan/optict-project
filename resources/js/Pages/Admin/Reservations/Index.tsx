@@ -188,7 +188,7 @@ export default function ReservationsIndex({
 
     return (
         <AdminLayout>
-            <Head title="Manajemen Reservasi Cabang - Optik Calm" />
+            <Head title="Manajemen Reservasi Cabang - Harmoni by Phoeinx Sehat" />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
@@ -222,22 +222,20 @@ export default function ReservationsIndex({
                     <div className="flex rounded-xl bg-surface-variant p-1 border border-outline-variant">
                         <button
                             onClick={() => setViewMode('calendar')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                                viewMode === 'calendar'
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'calendar'
                                     ? 'bg-primary text-on-primary shadow-sm'
                                     : 'text-on-surface-variant hover:text-on-surface'
-                            }`}
+                                }`}
                         >
                             <span className="material-symbols-outlined text-[16px]">calendar_month</span>
                             Kalender
                         </button>
                         <button
                             onClick={() => setViewMode('table')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                                viewMode === 'table'
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'table'
                                     ? 'bg-primary text-on-primary shadow-sm'
                                     : 'text-on-surface-variant hover:text-on-surface'
-                            }`}
+                                }`}
                         >
                             <span className="material-symbols-outlined text-[16px]">table_rows</span>
                             Tabel
@@ -264,11 +262,10 @@ export default function ReservationsIndex({
                     <button
                         key={st}
                         onClick={() => handleStatusFilter(st)}
-                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                            (filters.status || 'all') === st
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${(filters.status || 'all') === st
                                 ? 'bg-primary text-on-primary border-primary'
                                 : 'bg-surface-variant/60 text-on-surface-variant border-outline-variant hover:border-primary/40'
-                        }`}
+                            }`}
                     >
                         {st === 'all' ? 'Semua Status' : st}
                     </button>
@@ -445,11 +442,10 @@ export default function ReservationsIndex({
                                     key={st}
                                     type="button"
                                     onClick={() => handleUpdateStatus(selectedResForStatus, st)}
-                                    className={`w-full text-left px-4 py-3 rounded-xl border font-bold text-sm flex items-center justify-between transition-all cursor-pointer ${
-                                        selectedResForStatus.status === st
+                                    className={`w-full text-left px-4 py-3 rounded-xl border font-bold text-sm flex items-center justify-between transition-all cursor-pointer ${selectedResForStatus.status === st
                                             ? 'bg-primary text-on-primary border-primary'
                                             : 'bg-surface hover:bg-tertiary/40 border-outline-variant text-on-surface'
-                                    }`}
+                                        }`}
                                 >
                                     <span>{st}</span>
                                     {selectedResForStatus.status === st && <span>✓ Aktif</span>}
@@ -497,22 +493,20 @@ export default function ReservationsIndex({
                                 <button
                                     type="button"
                                     onClick={() => setData('customer_type', 'member')}
-                                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                                        data.customer_type === 'member'
+                                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${data.customer_type === 'member'
                                             ? 'bg-primary text-on-primary shadow-sm'
                                             : 'text-on-surface-variant hover:text-on-surface'
-                                    }`}
+                                        }`}
                                 >
                                     Member Terdaftar
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setData('customer_type', 'non_member')}
-                                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                                        data.customer_type === 'non_member'
+                                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${data.customer_type === 'non_member'
                                             ? 'bg-primary text-on-primary shadow-sm'
                                             : 'text-on-surface-variant hover:text-on-surface'
-                                    }`}
+                                        }`}
                                 >
                                     Non-Member / Tamu
                                 </button>
@@ -609,11 +603,10 @@ export default function ReservationsIndex({
                                     <div
                                         key={srv.id}
                                         onClick={() => toggleServiceSelection(srv)}
-                                        className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-center justify-between ${
-                                            isSelected
+                                        className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-center justify-between ${isSelected
                                                 ? 'bg-primary/10 border-primary text-primary font-bold'
                                                 : 'bg-surface border-outline-variant hover:border-primary/40'
-                                        }`}
+                                            }`}
                                     >
                                         <div>
                                             <p>{srv.name}</p>

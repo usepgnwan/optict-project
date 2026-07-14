@@ -149,7 +149,7 @@ export default function BranchesIndex({ branches, filters }: BranchesPageProps) 
 
     return (
         <AdminLayout>
-            <Head title="Manajemen Cabang - Optik Calm" />
+            <Head title="Manajemen Cabang - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Daftar Cabang Optik"
@@ -193,7 +193,7 @@ export default function BranchesIndex({ branches, filters }: BranchesPageProps) 
                             type="text"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Contoh: Optik Calm Jakarta Selatan"
+                            placeholder="Contoh: Harmoni by Phoeinx Sehat Jakarta Selatan"
                             className="w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary"
                             required
                         />

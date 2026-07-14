@@ -40,28 +40,28 @@ class DatabaseSeeder extends Seeder
         // ─── 2. Branches ───────────────────────────────────────────
         $branches = [
             [
-                'name' => 'Optik Calm Jakarta Pusat',
+                'name' => 'Harmoni by Phoeinx Sehat Jakarta Pusat',
                 'city' => 'Jakarta',
                 'address' => 'Jl. MH Thamrin No. 15, Menteng, Jakarta Pusat 10350',
                 'phone' => '081199988801',
                 'email' => 'jakarta@optikcalm.com',
             ],
             [
-                'name' => 'Optik Calm Bandung',
+                'name' => 'Harmoni by Phoeinx Sehat Bandung',
                 'city' => 'Bandung',
                 'address' => 'Jl. Braga No. 88, Sumur Bandung, Bandung 40111',
                 'phone' => '081199988802',
                 'email' => 'bandung@optikcalm.com',
             ],
             [
-                'name' => 'Optik Calm Surabaya',
+                'name' => 'Harmoni by Phoeinx Sehat Surabaya',
                 'city' => 'Surabaya',
                 'address' => 'Jl. Tunjungan No. 42, Genteng, Surabaya 60275',
                 'phone' => '081199988803',
                 'email' => 'surabaya@optikcalm.com',
             ],
             [
-                'name' => 'Optik Calm Medan',
+                'name' => 'Harmoni by Phoeinx Sehat Medan',
                 'city' => 'Medan',
                 'address' => 'Jl. Diponegoro No. 25, Medan Petisah 20152',
                 'phone' => '081199988804',
@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
         // ─── 3. Users ──────────────────────────────────────────────
         // Super Admin
         User::create([
-            'name' => 'Admin Optik Calm',
+            'name' => 'Admin Harmoni by Phoeinx Sehat',
             'email' => 'admin@optikcalm.com',
             'password' => Hash::make('password'),
             'role_id' => $superAdmin->id,

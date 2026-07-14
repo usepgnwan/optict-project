@@ -7,17 +7,17 @@ import StatusBadge from '@/Components/Admin/StatusBadge';
 import FormModal from '@/Components/Admin/FormModal';
 import SearchFilter from '@/Components/Admin/SearchFilter';
 
-interface ComplaintType {
+interface Faq {
     id: number;
-    name: string;
-    description: string | null;
+    question: string;
+    answer: string;
     is_active: boolean;
     sort_order: number;
 }
 
-interface ComplaintTypesPageProps {
-    complaintTypes: {
-        data: ComplaintType[];
+interface FaqsPageProps {
+    faqs: {
+        data: Faq[];
         links: any[];
     };
     filters: {
@@ -25,14 +25,14 @@ interface ComplaintTypesPageProps {
     };
 }
 
-export default function ComplaintTypesIndex({ complaintTypes, filters }: ComplaintTypesPageProps) {
+export default function FaqsIndex({ faqs, filters }: FaqsPageProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [showModal, setShowModal] = useState(false);
-    const [editingItem, setEditingItem] = useState<ComplaintType | null>(null);
+    const [editingItem, setEditingItem] = useState<Faq | null>(null);
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
-        name: '',
-        description: '',
+        question: '',
+        answer: '',
         sort_order: 1,
         is_active: true,
     });
@@ -40,7 +40,7 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
     const handleSearch = (val: string) => {
         setSearch(val);
         router.get(
-            route('complaint-types.index'),
+            route('faqs.index'),
             { search: val },
             { preserveState: true, replace: true }
         );
@@ -52,11 +52,11 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
         setShowModal(true);
     };
 
-    const openEditModal = (item: ComplaintType) => {
+    const openEditModal = (item: Faq) => {
         setEditingItem(item);
         setData({
-            name: item.name,
-            description: item.description || '',
+            question: item.question,
+            answer: item.answer,
             sort_order: item.sort_order,
             is_active: item.is_active,
         });
@@ -66,19 +66,19 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (editingItem) {
-            put(route('complaint-types.update', editingItem.id), {
+            put(route('faqs.update', editingItem.id), {
                 onSuccess: () => setShowModal(false),
             });
         } else {
-            post(route('complaint-types.store'), {
+            post(route('faqs.store'), {
                 onSuccess: () => setShowModal(false),
             });
         }
     };
 
-    const handleDelete = (item: ComplaintType) => {
-        if (confirm(`Apakah Anda yakin ingin menghapus tipe keluhan "${item.name}"?`)) {
-            router.delete(route('complaint-types.destroy', item.id));
+    const handleDelete = (item: Faq) => {
+        if (confirm(`Apakah Anda yakin ingin menghapus FAQ "${item.question}"?`)) {
+            router.delete(route('faqs.destroy', item.id));
         }
     };
 
@@ -86,55 +86,50 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
         {
             header: 'No. Urut',
             key: 'sort_order',
-            render: (item: ComplaintType) => (
+            render: (item: Faq) => (
                 <span className="font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md text-xs">
                     #{item.sort_order}
                 </span>
             ),
         },
         {
-            header: 'Nama Tipe Keluhan / Kebutuhan',
-            key: 'name',
-            render: (item: ComplaintType) => (
+            header: 'Pertanyaan',
+            key: 'question',
+            render: (item: Faq) => (
                 <div>
-                    <p className="font-bold text-on-surface">{item.name}</p>
-                    {item.description && (
-                        <p className="text-xs text-on-surface-variant mt-0.5 line-clamp-1">
-                            {item.description}
-                        </p>
-                    )}
+                    <p className="font-bold text-on-surface">{item.question}</p>
                 </div>
             ),
         },
         {
-            header: 'Deskripsi',
-            key: 'description',
-            render: (item: ComplaintType) => (
-                <span className="text-sm text-on-surface-variant">
-                    {item.description || '—'}
-                </span>
+            header: 'Jawaban',
+            key: 'answer',
+            render: (item: Faq) => (
+                <div className="text-sm text-on-surface-variant max-w-md">
+                    <p className="line-clamp-2">{item.answer}</p>
+                </div>
             ),
         },
         {
             header: 'Status',
             key: 'is_active',
-            render: (item: ComplaintType) => <StatusBadge status={item.is_active} />,
+            render: (item: Faq) => <StatusBadge status={item.is_active} />,
         },
         {
             header: 'Aksi',
             key: 'id',
-            render: (item: ComplaintType) => (
+            render: (item: Faq) => (
                 <div className="flex items-center gap-1.5">
                     <button
                         onClick={() => openEditModal(item)}
-                        title="Edit Tipe Keluhan"
+                        title="Edit FAQ"
                         className="p-1.5 rounded-lg text-on-surface-variant hover:bg-tertiary/60 hover:text-primary transition-colors cursor-pointer"
                     >
                         <span className="material-symbols-outlined text-[18px]">edit</span>
                     </button>
                     <button
                         onClick={() => handleDelete(item)}
-                        title="Hapus Tipe Keluhan"
+                        title="Hapus FAQ"
                         className="p-1.5 rounded-lg text-on-surface-variant hover:bg-rose-500/10 hover:text-rose-500 transition-colors cursor-pointer"
                     >
                         <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -146,19 +141,19 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
 
     return (
         <AdminLayout>
-            <Head title="Master Tipe Keluhan - Harmoni by Phoeinx Sehat" />
+            <Head title="Master FAQ - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
-                title="Master Tipe Keluhan / Kebutuhan"
-                subtitle="Daftar opsi keluhan atau jenis konsultasi untuk pilihan formulir booking online"
-                icon="clinical_notes"
+                title="Master Pertanyaan Umum (FAQ)"
+                subtitle="Daftar pertanyaan dan jawaban yang ditampilkan di halaman beranda"
+                icon="quiz"
                 action={
                     <button
                         onClick={openCreateModal}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-bold text-sm shadow-md shadow-primary/20 hover:bg-primary/90 transition-all cursor-pointer"
                     >
                         <span className="material-symbols-outlined text-[20px]">add</span>
-                        <span>Tambah Tipe Keluhan</span>
+                        <span>Tambah FAQ</span>
                     </button>
                 }
             />
@@ -166,36 +161,36 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
             <SearchFilter
                 search={search}
                 onSearchChange={handleSearch}
-                placeholder="Cari nama tipe keluhan atau deskripsi..."
+                placeholder="Cari pertanyaan atau jawaban..."
             />
 
             <DataTable
                 columns={columns}
-                data={complaintTypes.data}
-                links={complaintTypes.links}
-                emptyMessage="Belum ada data tipe keluhan."
+                data={faqs.data}
+                links={faqs.links}
+                emptyMessage="Belum ada data FAQ."
             />
 
             <FormModal
                 show={showModal}
                 onClose={() => setShowModal(false)}
-                title={editingItem ? 'Edit Tipe Keluhan' : 'Tambah Tipe Keluhan Baru'}
+                title={editingItem ? 'Edit FAQ' : 'Tambah FAQ Baru'}
             >
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div className="sm:col-span-3">
                             <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                                Nama Tipe Keluhan <span className="text-rose-500">*</span>
+                                Pertanyaan <span className="text-rose-500">*</span>
                             </label>
                             <input
                                 type="text"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                placeholder="Contoh: Pandangan Buram Jarak Jauh"
+                                value={data.question}
+                                onChange={(e) => setData('question', e.target.value)}
+                                placeholder="Contoh: Berapa lama proses pembuatan kacamata?"
                                 className="w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary"
                                 required
                             />
-                            {errors.name && <p className="text-xs text-rose-500 mt-1">{errors.name}</p>}
+                            {errors.question && <p className="text-xs text-rose-500 mt-1">{errors.question}</p>}
                         </div>
 
                         <div>
@@ -214,27 +209,29 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
 
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
-                            Deskripsi (Opsional)
+                            Jawaban <span className="text-rose-500">*</span>
                         </label>
                         <textarea
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            rows={3}
-                            placeholder="Penjelasan singkat mengenai keluhan atau kebutuhan ini..."
+                            value={data.answer}
+                            onChange={(e) => setData('answer', e.target.value)}
+                            rows={4}
+                            placeholder="Jawaban lengkap untuk pertanyaan ini..."
                             className="w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary"
+                            required
                         />
+                        {errors.answer && <p className="text-xs text-rose-500 mt-1">{errors.answer}</p>}
                     </div>
 
                     <div className="flex items-center gap-3 pt-2">
                         <input
                             type="checkbox"
-                            id="is_active_ct"
+                            id="is_active_faq"
                             checked={data.is_active}
                             onChange={(e) => setData('is_active', e.target.checked)}
                             className="w-4 h-4 rounded text-primary border-outline-variant"
                         />
-                        <label htmlFor="is_active_ct" className="text-sm font-semibold text-on-surface cursor-pointer">
-                            Tampilkan di Formulir Booking Online
+                        <label htmlFor="is_active_faq" className="text-sm font-semibold text-on-surface cursor-pointer">
+                            Tampilkan di Halaman Beranda (Home)
                         </label>
                     </div>
 
@@ -251,7 +248,7 @@ export default function ComplaintTypesIndex({ complaintTypes, filters }: Complai
                             disabled={processing}
                             className="px-5 py-2 rounded-xl bg-primary text-on-primary text-sm font-bold shadow-md shadow-primary/20 hover:bg-primary/90 disabled:opacity-50 transition-all cursor-pointer"
                         >
-                            {processing ? 'Menyimpan...' : editingItem ? 'Simpan Perubahan' : 'Tambah Tipe Keluhan'}
+                            {processing ? 'Menyimpan...' : editingItem ? 'Simpan Perubahan' : 'Tambah FAQ'}
                         </button>
                     </div>
                 </form>

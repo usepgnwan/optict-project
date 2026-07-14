@@ -147,7 +147,7 @@ export default function ServiceCategoriesIndex({ categories, filters }: ServiceC
 
     return (
         <AdminLayout>
-            <Head title="Master Kategori Layanan - Optik Calm" />
+            <Head title="Master Kategori Layanan - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Master Kategori Layanan"

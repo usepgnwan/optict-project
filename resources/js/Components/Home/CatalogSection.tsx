@@ -41,7 +41,7 @@ const defaultProducts: ProductItem[] = [
         category: 'Titanium Series',
         name: 'Aura Gold Classic',
         sku: 'FRM-AURA-01',
-        brand: 'Optik Calm Titanium',
+        brand: 'Harmoni by Phoeinx Sehat Titanium',
         price: 'Rp 1.450.000',
         priceValue: 1450000,
         badge: { text: 'New Arrival', color: 'bg-secondary text-on-secondary' },
@@ -49,8 +49,8 @@ const defaultProducts: ProductItem[] = [
         description: 'Bingkai berbahan titanium murni yang sangat ringan, anti-karat, serta hipoalergenik untuk kenyamanan maksimal sepanjang hari.',
         centralStock: 24,
         branchAvailability: [
-            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8 },
-            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5 },
+            { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8 },
+            { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5 },
         ],
     },
     {
@@ -58,7 +58,7 @@ const defaultProducts: ProductItem[] = [
         category: 'Urban Lifestyle',
         name: 'Midnight Matte',
         sku: 'FRM-MID-02',
-        brand: 'Optik Calm Urban',
+        brand: 'Harmoni by Phoeinx Sehat Urban',
         price: 'Rp 980.000',
         priceValue: 980000,
         badge: { text: 'Popular', color: 'bg-primary text-on-primary' },
@@ -66,8 +66,8 @@ const defaultProducts: ProductItem[] = [
         description: 'Desain asetat matte modern yang kokoh dengan sentuhan finishing halus, cocok untuk aktivitas urban sehari-hari.',
         centralStock: 18,
         branchAvailability: [
-            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 12 },
-            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0 },
+            { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 12 },
+            { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0 },
         ],
     },
     {
@@ -75,7 +75,7 @@ const defaultProducts: ProductItem[] = [
         category: 'Modern Collection',
         name: 'Sage Transparent',
         sku: 'FRM-SAGE-03',
-        brand: 'Optik Calm Studio',
+        brand: 'Harmoni by Phoeinx Sehat Studio',
         price: 'Rp 1.120.000',
         priceValue: 1120000,
         badge: null,
@@ -83,8 +83,8 @@ const defaultProducts: ProductItem[] = [
         description: 'Bingkai transparan bernuansa sage crystal yang elegan, memberikan tampilan wajah cerah dan estetik ala Korea.',
         centralStock: 30,
         branchAvailability: [
-            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 6 },
-            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 4 },
+            { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 6 },
+            { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 4 },
         ],
     },
     {
@@ -92,7 +92,7 @@ const defaultProducts: ProductItem[] = [
         category: 'Heritage Series',
         name: 'Tortoise Round',
         sku: 'FRM-TORT-04',
-        brand: 'Optik Calm Heritage',
+        brand: 'Harmoni by Phoeinx Sehat Heritage',
         price: 'Rp 1.250.000',
         priceValue: 1250000,
         badge: null,
@@ -100,8 +100,8 @@ const defaultProducts: ProductItem[] = [
         description: 'Siluet klasik bulat dengan corak tortoise klasik yang tak lekang oleh waktu, dilengkapi engsel fleksibel premium.',
         centralStock: 15,
         branchAvailability: [
-            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 3 },
-            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 7 },
+            { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 3 },
+            { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 7 },
         ],
     },
     {
@@ -109,7 +109,7 @@ const defaultProducts: ProductItem[] = [
         category: 'Minimalist Frame',
         name: 'Crystal Clear Acetate',
         sku: 'FRM-CRYS-05',
-        brand: 'Optik Calm Pure',
+        brand: 'Harmoni by Phoeinx Sehat Pure',
         price: 'Rp 750.000',
         priceValue: 750000,
         badge: { text: 'Best Value', color: 'bg-emerald-600 text-white' },
@@ -117,8 +117,8 @@ const defaultProducts: ProductItem[] = [
         description: 'Bingkai asetat jernih transparan yang super ringan, bergaya kontemporer cocok untuk lensa minus maupun progresif.',
         centralStock: 40,
         branchAvailability: [
-            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 15 },
-            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 10 },
+            { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 15 },
+            { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 10 },
         ],
     },
     {
@@ -126,7 +126,7 @@ const defaultProducts: ProductItem[] = [
         category: 'Luxury Titanium',
         name: 'Obsidian Black Titanium',
         sku: 'FRM-OBS-06',
-        brand: 'Optik Calm Titanium',
+        brand: 'Harmoni by Phoeinx Sehat Titanium',
         price: 'Rp 1.850.000',
         priceValue: 1850000,
         badge: { text: 'Premium', color: 'bg-amber-600 text-white' },
@@ -134,8 +134,8 @@ const defaultProducts: ProductItem[] = [
         description: 'Pilihan eksekutif kelas atas dengan lapisan titanium hitam obsidian, tangkai ultra-slim dan nosepad silikon lembut.',
         centralStock: 10,
         branchAvailability: [
-            { branchId: 1, branchName: 'Optik Calm Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 4 },
-            { branchId: 2, branchName: 'Optik Calm Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 3 },
+            { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 4 },
+            { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 3 },
         ],
     },
 ];
@@ -193,7 +193,7 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                 category: p.category ? p.category.toUpperCase() : 'FRAME',
                 name: p.name,
                 sku: p.sku || `SKU-${p.id}`,
-                brand: p.brand || 'Optik Calm',
+                brand: p.brand || 'Harmoni by Phoeinx Sehat',
                 frameType: formatFrameType(p.frame_type),
                 frameColor: p.frame_color || 'Standard',
                 lensType: formatLensType(p.lens_type),
@@ -201,7 +201,7 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                 priceValue: Number(p.selling_price || 0),
                 badge: { text: p.category?.toUpperCase() || 'FRAME', color: 'bg-primary text-on-primary' },
                 image: resolvedImage,
-                description: p.description || 'Bingkai kacamata presisi tinggi standar optikal Optik Calm.',
+                description: p.description || 'Bingkai kacamata presisi tinggi standar optikal Harmoni by Phoeinx Sehat.',
                 centralStock: p.central_inventory?.quantity ?? 0,
                 branchAvailability: defaultBranches.length > 0 ? defaultBranches : defaultProducts[0].branchAvailability,
             };
@@ -265,7 +265,7 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                             Katalog Kacamata &amp; Frame
                         </h2>
                         <p className="text-on-surface-variant max-w-2xl">
-                            Temukan bingkai favorit Anda dan cek langsung ketersediaan stok real-time di Gudang Pusat maupun di seluruh cabang Optik Calm.
+                            Temukan bingkai favorit Anda dan cek langsung ketersediaan stok real-time di Gudang Pusat maupun di seluruh cabang Harmoni by Phoeinx Sehat.
                         </p>
                     </div>
 
@@ -496,11 +496,10 @@ export default function CatalogSection({ isHomePreview = false, dbProducts = [],
                                 key={pageNum}
                                 onClick={() => setCurrentPage(pageNum)}
                                 aria-label={`Halaman ${pageNum}`}
-                                className={`w-11 h-11 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
-                                    currentPage === pageNum
+                                className={`w-11 h-11 rounded-2xl font-bold text-sm transition-all cursor-pointer ${currentPage === pageNum
                                         ? 'bg-primary text-on-primary shadow-lg shadow-primary/25'
                                         : 'bg-surface border border-outline-variant text-primary hover:bg-tertiary/50'
-                                }`}
+                                    }`}
                             >
                                 {pageNum}
                             </button>

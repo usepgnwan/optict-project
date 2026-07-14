@@ -36,11 +36,11 @@ export default function BookingFormSection({
     const activeBookingBranches =
         branches && branches.length > 0
             ? branches.map((b: any) => ({
-                  id: b.id,
-                  city: b.city || 'Cabang',
-                  name: b.name,
-                  phone: b.phone || '081199988877',
-              }))
+                id: b.id,
+                city: b.city || 'Cabang',
+                name: b.name,
+                phone: b.phone || '081199988877',
+            }))
             : fallbackBranches;
 
     const { sharedComplaintTypes, complaintTypes: pageComplaintTypes } = usePage().props as any;
@@ -48,10 +48,10 @@ export default function BookingFormSection({
         complaintTypes && complaintTypes.length > 0
             ? complaintTypes
             : sharedComplaintTypes && sharedComplaintTypes.length > 0
-            ? sharedComplaintTypes
-            : pageComplaintTypes && pageComplaintTypes.length > 0
-            ? pageComplaintTypes
-            : fallbackComplaintTypes;
+                ? sharedComplaintTypes
+                : pageComplaintTypes && pageComplaintTypes.length > 0
+                    ? pageComplaintTypes
+                    : fallbackComplaintTypes;
 
     const [selectedBranch, setSelectedBranch] = useState(activeBookingBranches[0]);
     const [isOpen, setIsOpen] = useState(false);
@@ -134,7 +134,7 @@ export default function BookingFormSection({
             cleanPhone = '62' + cleanPhone;
         }
 
-        const text = `Halo Optik Calm (${selectedBranch.city} - ${selectedBranch.name}), saya sudah membuat reservasi online dengan detail berikut:\n\n• No. Reservasi: ${savedReservationNumber}\n• Nama: ${fullName}\n• WhatsApp: ${whatsapp}\n• Cabang / Layanan: ${selectedBranch.city} (${selectedBranch.name})\n• Tipe Keluhan: ${complaint}\n• Rencana Tanggal: ${date || 'Segera'}\n\nMohon konfirmasinya, terima kasih!`;
+        const text = `Halo Harmoni by Phoeinx Sehat (${selectedBranch.city} - ${selectedBranch.name}), saya sudah membuat reservasi online dengan detail berikut:\n\n• No. Reservasi: ${savedReservationNumber}\n• Nama: ${fullName}\n• WhatsApp: ${whatsapp}\n• Cabang / Layanan: ${selectedBranch.city} (${selectedBranch.name})\n• Tipe Keluhan: ${complaint}\n• Rencana Tanggal: ${date || 'Segera'}\n\nMohon konfirmasinya, terima kasih!`;
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
     };
 
@@ -210,9 +210,8 @@ export default function BookingFormSection({
                                         </span>
                                     </div>
                                     <span
-                                        className={`material-symbols-outlined text-on-surface-variant transition-transform duration-300 ${
-                                            isOpen ? 'rotate-180 text-primary' : ''
-                                        }`}
+                                        className={`material-symbols-outlined text-on-surface-variant transition-transform duration-300 ${isOpen ? 'rotate-180 text-primary' : ''
+                                            }`}
                                     >
                                         expand_more
                                     </span>
@@ -251,9 +250,8 @@ export default function BookingFormSection({
                                                                 setSelectedBranch(branch);
                                                                 setIsOpen(false);
                                                             }}
-                                                            className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-tertiary/30 transition-colors cursor-pointer ${
-                                                                isSelected ? 'bg-primary/10' : ''
-                                                            }`}
+                                                            className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-tertiary/30 transition-colors cursor-pointer ${isSelected ? 'bg-primary/10' : ''
+                                                                }`}
                                                         >
                                                             <div>
                                                                 <p className="font-bold text-sm text-on-surface">

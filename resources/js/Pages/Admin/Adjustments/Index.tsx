@@ -94,7 +94,7 @@ export default function AdjustmentsIndex({ adjustments, filters, reasons }: Adju
 
     return (
         <AdminLayout>
-            <Head title="Penyesuaian Stok - Optik Calm" />
+            <Head title="Penyesuaian Stok - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Riwayat Penyesuaian Stok (Adjustments)"
@@ -113,7 +113,7 @@ export default function AdjustmentsIndex({ adjustments, filters, reasons }: Adju
 
             <SearchFilter
                 search=""
-                onSearchChange={() => {}}
+                onSearchChange={() => { }}
                 placeholder="Filter penyesuaian stok..."
             >
                 <select

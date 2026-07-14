@@ -92,7 +92,7 @@ export default function OpnamesIndex({ opnames, filters, statuses }: OpnamesInde
 
     return (
         <AdminLayout>
-            <Head title="Stock Opname - Optik Calm" />
+            <Head title="Stock Opname - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Daftar Stock Opname (Penghitungan Fisik)"
@@ -111,7 +111,7 @@ export default function OpnamesIndex({ opnames, filters, statuses }: OpnamesInde
 
             <SearchFilter
                 search=""
-                onSearchChange={() => {}}
+                onSearchChange={() => { }}
                 placeholder="Filter sesi opname..."
             >
                 <select

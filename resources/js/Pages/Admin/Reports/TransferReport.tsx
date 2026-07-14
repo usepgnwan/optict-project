@@ -69,7 +69,7 @@ export default function TransferReport({ transfers }: TransferReportProps) {
 
     return (
         <AdminLayout>
-            <Head title="Laporan Transfer - Optik Calm" />
+            <Head title="Laporan Transfer - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link

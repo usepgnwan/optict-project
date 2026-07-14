@@ -168,7 +168,7 @@ export default function CustomersIndex({ customers, filters }: CustomersPageProp
 
     return (
         <AdminLayout>
-            <Head title="Data Pelanggan - Optik Calm" />
+            <Head title="Data Pelanggan - Harmoni by Phoeinx Sehat" />
 
             <PageHeader
                 title="Manajemen Pelanggan Optik"

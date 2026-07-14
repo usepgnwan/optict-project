@@ -13,22 +13,23 @@ import TestimonialsSection from '@/Components/Home/TestimonialsSection';
 import BranchDirectorySection from '@/Components/Home/BranchDirectorySection';
 import FaqSection from '@/Components/Home/FaqSection';
 
-export default function Home({ dbProducts = [], branches = [] }: { dbProducts?: any[]; branches?: any[] }) {
+export default function Home({ dbProducts = [], branches = [], faqs = [], specialistServices = [] }: { dbProducts?: any[]; branches?: any[]; faqs?: any[]; specialistServices?: any[] }) {
     return (
         <HomeLayout title="Home | Layanan Kesehatan Mata Terpercaya">
             <HeroSection />
             <AboutSection />
             <ComplaintsSection />
+            <ServicesSection services={specialistServices} />
+            <CatalogSection isHomePreview={true} dbProducts={dbProducts} branches={branches} />
+
             <ProcessSection />
             <LocationsSection branches={branches} />
-            <ServicesSection />
-            <CatalogSection isHomePreview={true} dbProducts={dbProducts} branches={branches} />
             <AffiliateSection />
             <CtaSection />
             <StatsSection />
             <TestimonialsSection />
             <BranchDirectorySection branches={branches} />
-            <FaqSection />
+            <FaqSection faqs={faqs} />
         </HomeLayout>
     );
 }

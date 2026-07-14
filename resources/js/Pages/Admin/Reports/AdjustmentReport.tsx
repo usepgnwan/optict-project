@@ -68,7 +68,7 @@ export default function AdjustmentReport({ adjustments }: AdjustmentReportProps)
 
     return (
         <AdminLayout>
-            <Head title="Laporan Penyesuaian - Optik Calm" />
+            <Head title="Laporan Penyesuaian - Harmoni by Phoeinx Sehat" />
 
             <div className="mb-4">
                 <Link
