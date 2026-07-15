@@ -15,6 +15,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        if ($user && $user->role && $user->role->name === 'affiliator') {
+            $affiliate = $user->affiliate;
+            return Inertia::render('Affiliate/Dashboard', [
+                'affiliate' => $affiliate,
+            ]);
+        }
+
         $totalProducts = Product::count();
         $activeProducts = Product::active()->count();
         $totalBranches = Branch::active()->count();

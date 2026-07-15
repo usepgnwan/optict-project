@@ -34,6 +34,7 @@ class BookingSubmissionController extends Controller
 
         $complaintText = $request->complaint ?: 'Pemeriksaan Mata';
         $branchNote = !is_numeric($request->branch_id) ? " [Layanan Pilihan: " . ($request->branch_name ?: $request->branch_id) . "]" : "";
+        $referralNote = $request->referral_code ? "\nKode Referal: " . strtoupper($request->referral_code) : "";
 
         $reservation = $this->reservationService->createReservation([
             'reservation_type' => 'Online',
@@ -43,7 +44,7 @@ class BookingSubmissionController extends Controller
             'reservation_date' => $request->date,
             'reservation_time' => $request->time ?? '10:00',
             'status' => 'Waiting',
-            'notes' => "Tipe Keluhan / Kebutuhan: " . $complaintText . $branchNote,
+            'notes' => "Tipe Keluhan / Kebutuhan: " . $complaintText . $branchNote . $referralNote,
             'items' => [],
         ]);
 

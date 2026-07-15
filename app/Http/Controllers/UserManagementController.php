@@ -15,7 +15,17 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
+        $affiliatorRole = Role::where('name', Role::AFFILIATOR)->first();
+
         $query = User::with(['role', 'branch']);
+
+        // Sembunyikan user affiliator dari halaman manajemen user biasa
+        if ($affiliatorRole) {
+            $query->where(function ($q) use ($affiliatorRole) {
+                $q->where('role_id', '!=', $affiliatorRole->id)
+                  ->orWhereNull('role_id');
+            });
+        }
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -32,7 +42,7 @@ class UserManagementController extends Controller
 
         return Inertia::render('Admin/Users/Index', [
             'users' => $users,
-            'roles' => Role::all(),
+            'roles' => Role::where('name', '!=', Role::AFFILIATOR)->get(),
             'branches' => Branch::active()->get(),
             'filters' => $request->only(['search', 'role_id']),
         ]);

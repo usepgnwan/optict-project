@@ -50,6 +50,14 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (! Auth::user()->is_active) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Akun Anda belum disetujui atau sedang tidak aktif.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

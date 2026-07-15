@@ -5,7 +5,8 @@ import { useDarkMode } from '@/Hooks/useDarkMode';
 export default function Navbar() {
     const { isDark, toggleDarkMode } = useDarkMode();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const { url } = usePage();
+    const { url, props } = usePage<any>();
+    const user = props.auth?.user;
 
     const isCatalogActive = url.startsWith('/katalog-kacamata');
     const isBookingActive = url.startsWith('/booking');
@@ -21,7 +22,9 @@ export default function Navbar() {
         { name: 'Booking', href: '/booking', icon: 'calendar_month', isAnchor: false, active: isBookingActive },
         { name: 'Services', href: '/layanan', icon: 'medical_services', isAnchor: false, active: isLayananActive },
         { name: 'Affiliate', href: '/affiliate', icon: 'handshake', isAnchor: false, active: isAffiliateActive },
-        { name: 'Admin', href: '/dashboard', icon: 'admin_panel_settings', isAnchor: false, active: false },
+        user 
+            ? { name: 'Admin', href: '/dashboard', icon: 'admin_panel_settings', isAnchor: false, active: false }
+            : { name: 'Login', href: '/login', icon: 'login', isAnchor: false, active: false },
     ];
 
     return (

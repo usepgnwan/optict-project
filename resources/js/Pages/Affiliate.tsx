@@ -1,9 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HomeLayout from '@/Layouts/HomeLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import CtaSection from '@/Components/Home/CtaSection';
 
 export default function Affiliate() {
+    const { flash } = usePage<any>().props;
+    const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        if (flash?.success) {
+            setShowSuccessModal(true);
+        }
+    }, [flash?.success]);
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        email: '',
+        phone: '',
+        city: '',
+        age: '',
+        promotional_media: [] as string[],
+        promotional_link: '',
+        photo: null as File | null,
+        bank_name: '',
+        bank_account_number: '',
+        agreement: false,
+    });
+
+    const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setData('photo', file);
+            setPhotoPreview(URL.createObjectURL(file));
+        } else {
+            setData('photo', null);
+            setPhotoPreview(null);
+        }
+    };
+
+    const handleMediaChange = (media: string, checked: boolean) => {
+        if (checked) {
+            setData('promotional_media', [...data.promotional_media, media]);
+        } else {
+            setData('promotional_media', data.promotional_media.filter(m => m !== media));
+        }
+    };
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('affiliate.store'), {
+            onSuccess: () => {
+                reset();
+                setPhotoPreview(null);
+                setShowSuccessModal(true);
+            },
+            onError: (errs) => {
+                if (errs.email || errs.phone) {
+                    setErrorMessage('Email atau No. WhatsApp sudah terdaftar. Silakan gunakan akun lain.');
+                    setShowErrorModal(true);
+                }
+            },
+            preserveScroll: true
+        });
+    };
+
     return (
         <HomeLayout title="Program Afiliasi | Harmoni by Phoeinx Sehat">
             <Head title="Program Afiliasi Kemitraan" />
@@ -150,6 +213,51 @@ export default function Affiliate() {
 
                 <div className="h-px bg-outline-variant my-12" />
 
+                {/* Alur Pendaftaran */}
+                <div className="mb-14 bg-surface-variant/20 rounded-[24px] p-8 border border-outline-variant">
+                    <h3 className="text-xl font-bold text-primary mb-8 text-center tracking-tight">Alur Pendaftaran Kemitraan</h3>
+                    <div className="flex flex-col md:flex-row items-start justify-between relative gap-8 md:gap-0">
+                        {/* Garis Penghubung (Hanya Desktop) */}
+                        <div className="hidden md:block absolute top-6 left-12 right-12 h-[2px] bg-outline-variant/80 -z-10" />
+                        
+                        {/* Step 1 */}
+                        <div className="flex flex-row md:flex-col items-center text-center gap-4 md:gap-4 flex-1 relative bg-transparent px-2 group">
+                            <div className="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg shadow-lg shadow-primary/20 shrink-0 group-hover:scale-110 transition-transform">1</div>
+                            <div className="text-left md:text-center">
+                                <h4 className="font-bold text-on-surface text-[15px]">Daftar Affiliator</h4>
+                                <p className="text-[13px] text-on-surface-variant mt-1.5 leading-relaxed max-w-[200px] mx-auto">Isi formulir dengan data diri yang benar.</p>
+                            </div>
+                        </div>
+
+                        {/* Step 2 */}
+                        <div className="flex flex-row md:flex-col items-center text-center gap-4 md:gap-4 flex-1 relative bg-transparent px-2 group">
+                            <div className="w-12 h-12 rounded-full bg-surface text-primary border-2 border-primary/30 flex items-center justify-center font-bold text-lg shadow-sm shrink-0 group-hover:border-primary transition-colors">2</div>
+                            <div className="text-left md:text-center">
+                                <h4 className="font-bold text-on-surface text-[15px]">Proses Approval</h4>
+                                <p className="text-[13px] text-on-surface-variant mt-1.5 leading-relaxed max-w-[200px] mx-auto">Tim kami akan meninjau dan menyetujui akun.</p>
+                            </div>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="flex flex-row md:flex-col items-center text-center gap-4 md:gap-4 flex-1 relative bg-transparent px-2 group">
+                            <div className="w-12 h-12 rounded-full bg-surface text-primary border-2 border-primary/30 flex items-center justify-center font-bold text-lg shadow-sm shrink-0 group-hover:border-primary transition-colors">3</div>
+                            <div className="text-left md:text-center">
+                                <h4 className="font-bold text-on-surface text-[15px]">Masuk Dashboard</h4>
+                                <p className="text-[13px] text-on-surface-variant mt-1.5 leading-relaxed max-w-[200px] mx-auto">Login ke panel untuk melihat kode Anda.</p>
+                            </div>
+                        </div>
+
+                        {/* Step 4 */}
+                        <div className="flex flex-row md:flex-col items-center text-center gap-4 md:gap-4 flex-1 relative bg-transparent px-2 group">
+                            <div className="w-12 h-12 rounded-full bg-surface text-primary border-2 border-primary/30 flex items-center justify-center font-bold text-lg shadow-sm shrink-0 group-hover:border-primary transition-colors">4</div>
+                            <div className="text-left md:text-center">
+                                <h4 className="font-bold text-on-surface text-[15px]">Mulai Promosi</h4>
+                                <p className="text-[13px] text-on-surface-variant mt-1.5 leading-relaxed max-w-[200px] mx-auto">Bagikan kode referal dan nikmati komisi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Form Pendaftaran */}
                 <h2 id="pendaftaran" className="text-2xl font-bold text-primary mb-3 tracking-tight">
                     Formulir Pendaftaran Afiliasi
@@ -158,31 +266,36 @@ export default function Affiliate() {
                     Isi data kualifikasi di bawah ini untuk memulai langkah kemitraan Anda bersama kami.
                 </p>
 
-                <form className="bg-surface border border-outline-variant p-8 md:p-10 rounded-[24px] shadow-sm" onSubmit={(e) => e.preventDefault()}>
+                <form className="bg-surface border border-outline-variant p-8 md:p-10 rounded-[24px] shadow-sm" onSubmit={submit}>
                     <div className="mb-6">
                         <label className="block font-bold text-sm text-on-surface mb-2">Nama Lengkap</label>
-                        <input type="text" required placeholder="Nama sesuai identitas resmi" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                        <input type="text" value={data.name} onChange={e => setData('name', e.target.value)} required placeholder="Nama sesuai identitas resmi" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                             <label className="block font-bold text-sm text-on-surface mb-2">Alamat Email</label>
-                            <input type="email" required placeholder="budi@email.com" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            <input type="email" value={data.email} onChange={e => setData('email', e.target.value)} required placeholder="budi@email.com" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                         </div>
                         <div>
                             <label className="block font-bold text-sm text-on-surface mb-2">Nomor WhatsApp</label>
-                            <input type="text" required placeholder="08123456789" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            <input type="text" value={data.phone} onChange={e => setData('phone', e.target.value)} required placeholder="08123456789" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div className="md:col-span-2">
                             <label className="block font-bold text-sm text-on-surface mb-2">Domisili Kota</label>
-                            <input type="text" required placeholder="Contoh: Bandung" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            <input type="text" value={data.city} onChange={e => setData('city', e.target.value)} required placeholder="Contoh: Bandung" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
                         </div>
                         <div>
                             <label className="block font-bold text-sm text-on-surface mb-2">Umur</label>
-                            <input type="number" required placeholder="Tahun" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            <input type="number" value={data.age} onChange={e => setData('age', e.target.value)} required placeholder="Tahun" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                            {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age}</p>}
                         </div>
                     </div>
 
@@ -190,31 +303,41 @@ export default function Affiliate() {
                         <label className="block font-bold text-sm text-on-surface mb-3">Media Utama yang Digunakan untuk Promosi</label>
                         <div className="space-y-2">
                             <label className="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
+                                <input type="checkbox" checked={data.promotional_media.includes('WhatsApp')} onChange={e => handleMediaChange('WhatsApp', e.target.checked)} className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
                                 <span className="text-[15px] text-on-surface-variant group-hover:text-on-surface transition-colors">WhatsApp</span>
                             </label>
                             <label className="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
+                                <input type="checkbox" checked={data.promotional_media.includes('Instagram / Facebook')} onChange={e => handleMediaChange('Instagram / Facebook', e.target.checked)} className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
                                 <span className="text-[15px] text-on-surface-variant group-hover:text-on-surface transition-colors">Instagram / Facebook</span>
                             </label>
                             <label className="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
+                                <input type="checkbox" checked={data.promotional_media.includes('TikTok / YouTube')} onChange={e => handleMediaChange('TikTok / YouTube', e.target.checked)} className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
                                 <span className="text-[15px] text-on-surface-variant group-hover:text-on-surface transition-colors">TikTok / YouTube</span>
                             </label>
                         </div>
+                        {errors.promotional_media && <p className="text-red-500 text-xs mt-1">{errors.promotional_media}</p>}
                     </div>
 
                     <div className="mb-6">
                         <label className="block font-bold text-sm text-on-surface mb-2">Link / Tautan Akun Media Promosi</label>
-                        <input type="text" required placeholder="Link profil media sosial atau website Anda" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                        <input type="text" value={data.promotional_link} onChange={e => setData('promotional_link', e.target.value)} required placeholder="Link profil media sosial atau website Anda" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                        {errors.promotional_link && <p className="text-red-500 text-xs mt-1">{errors.promotional_link}</p>}
                     </div>
 
                     <div className="mb-8">
                         <label className="block font-bold text-sm text-on-surface mb-2">Unggah Foto Diri Jelas (Maks 5MB)</label>
-                        <div className="bg-surface-variant/30 border-2 border-dashed border-outline-variant p-8 text-center rounded-xl cursor-pointer hover:bg-surface-variant/60 transition-colors">
-                            <span className="material-symbols-outlined text-4xl text-primary/50 mb-2">cloud_upload</span>
-                            <span className="block text-sm font-bold text-primary">Pilih berkas foto profil digital Anda</span>
-                        </div>
+                        <label className="block bg-surface-variant/30 border-2 border-dashed border-outline-variant p-8 text-center rounded-xl cursor-pointer hover:bg-surface-variant/60 transition-colors relative overflow-hidden">
+                            <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handlePhotoChange} />
+                            {photoPreview ? (
+                                <img src={photoPreview} alt="Preview" className="mx-auto h-32 object-contain rounded-lg" />
+                            ) : (
+                                <>
+                                    <span className="material-symbols-outlined text-4xl text-primary/50 mb-2 block">cloud_upload</span>
+                                    <span className="block text-sm font-bold text-primary">Pilih berkas foto profil digital Anda</span>
+                                </>
+                            )}
+                        </label>
+                        {errors.photo && <p className="text-red-500 text-xs mt-1">{errors.photo}</p>}
                     </div>
 
                     <h3 className="font-bold text-lg text-primary border-t border-outline-variant/60 pt-8 mb-6">
@@ -223,7 +346,7 @@ export default function Affiliate() {
 
                     <div className="mb-6">
                         <label className="block font-bold text-sm text-on-surface mb-2">Nama Bank / Pilihan E-Wallet</label>
-                        <select required className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                        <select value={data.bank_name} onChange={e => setData('bank_name', e.target.value)} required className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
                             <option value="">-- Pilih Rekening Tujuan --</option>
                             <option value="BCA">Bank Central Asia (BCA)</option>
                             <option value="Mandiri">Bank Mandiri</option>
@@ -233,28 +356,73 @@ export default function Affiliate() {
                             <option value="OVO">OVO</option>
                             <option value="GOPAY">GoPay</option>
                         </select>
+                        {errors.bank_name && <p className="text-red-500 text-xs mt-1">{errors.bank_name}</p>}
                     </div>
 
                     <div className="mb-8">
                         <label className="block font-bold text-sm text-on-surface mb-2">Nomor Rekening / ID Akun E-Wallet</label>
-                        <input type="text" required placeholder="Masukkan nomor akun pembayaran Anda" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                        <input type="text" value={data.bank_account_number} onChange={e => setData('bank_account_number', e.target.value)} required placeholder="Masukkan nomor akun pembayaran Anda" className="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-variant/30 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" />
+                        {errors.bank_account_number && <p className="text-red-500 text-xs mt-1">{errors.bank_account_number}</p>}
                     </div>
 
                     <label className="flex items-start gap-3 cursor-pointer group mb-8">
-                        <input type="checkbox" required className="mt-1 w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
+                        <input type="checkbox" checked={data.agreement} onChange={e => setData('agreement', e.target.checked)} required className="mt-1 w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
                         <span className="text-[13.5px] text-on-surface-variant leading-relaxed">
                             Saya setuju untuk mematuhi segala syarat, ketentuan kebijakan operasional, dan komitmen kode etik promosi dari Harmoni by Phoeinx Sehat.
                         </span>
                     </label>
+                    {errors.agreement && <p className="text-red-500 text-xs mt-1 mb-4">{errors.agreement}</p>}
 
                     <div className="text-center">
-                        <button type="submit" className="bg-primary text-on-primary px-10 py-4 font-bold rounded-2xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all hover:-translate-y-0.5 w-full sm:w-auto text-base">
-                            Kirim Formulir Pendaftaran
+                        <button type="submit" disabled={processing} className="bg-primary text-on-primary px-10 py-4 font-bold rounded-2xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all hover:-translate-y-0.5 w-full sm:w-auto text-base disabled:opacity-50 disabled:hover:translate-y-0">
+                            {processing ? 'Mengirim...' : 'Kirim Formulir Pendaftaran'}
                         </button>
                     </div>
                 </form>
 
             </div>
+
+            {/* Modal Sukses Pendaftaran */}
+            {showSuccessModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+                    <div className="bg-surface rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-center">
+                        <div className="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                            <span className="material-symbols-outlined text-[40px]">check_circle</span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-primary mb-3">Pendaftaran Berhasil!</h3>
+                        <p className="text-on-surface-variant leading-relaxed mb-8">
+                            Pendaftaran mu sedang di proses tunggu konfirmasi dari admin akan menghubungi anda dalam waktu dekat
+                        </p>
+                        <button
+                            onClick={() => setShowSuccessModal(false)}
+                            className="bg-primary text-on-primary w-full py-3.5 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-md"
+                        >
+                            Tutup & Kembali
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Error Validasi */}
+            {showErrorModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+                    <div className="bg-surface rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-center">
+                        <div className="w-20 h-20 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                            <span className="material-symbols-outlined text-[40px]">warning</span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-primary mb-3">Pendaftaran Gagal</h3>
+                        <p className="text-on-surface-variant leading-relaxed mb-8">
+                            {errorMessage}
+                        </p>
+                        <button
+                            onClick={() => setShowErrorModal(false)}
+                            className="bg-surface text-primary border-2 border-primary/20 w-full py-3.5 rounded-xl font-bold hover:bg-primary/5 transition-all shadow-sm cursor-pointer"
+                        >
+                            Coba Lagi
+                        </button>
+                    </div>
+                </div>
+            )}
         </HomeLayout>
     );
 }
