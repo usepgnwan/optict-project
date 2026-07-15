@@ -11,6 +11,7 @@ class Role extends Model
     public const WAREHOUSE_ADMIN = 'warehouse_admin';
     public const BRANCH_ADMIN = 'branch_admin';
     public const MANAGER = 'manager';
+    public const AFFILIATOR = 'affiliator';
 
     protected $fillable = ['name', 'display_name', 'description'];
 
@@ -26,6 +27,7 @@ class Role extends Model
             self::WAREHOUSE_ADMIN,
             self::BRANCH_ADMIN,
             self::MANAGER,
+            self::AFFILIATOR,
         ];
     }
 }

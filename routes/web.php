@@ -52,6 +52,7 @@ Route::get('/layanan/{slug}', [\App\Http\Controllers\SpecialistServiceController
 Route::get('/affiliate', function () {
     return Inertia::render('Affiliate');
 })->name('affiliate');
+Route::post('/affiliate', [\App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
 
 Route::get('/katalog-kacamata/{slug}', function ($slug) {
     $products = \App\Models\Product::active()->with(['centralInventory', 'branchInventories.branch'])->get();
@@ -105,6 +106,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User Management
     Route::resource('users', UserManagementController::class)->except(['create', 'edit', 'show']);
+
+    // Affiliate Management
+    Route::get('/affiliates', [\App\Http\Controllers\Admin\AffiliateManagementController::class, 'index'])->name('admin.affiliates.index');
+    Route::post('/affiliates/{affiliate}/approve', [\App\Http\Controllers\Admin\AffiliateManagementController::class, 'approve'])->name('admin.affiliates.approve');
+    Route::post('/affiliates/{affiliate}/reject', [\App\Http\Controllers\Admin\AffiliateManagementController::class, 'reject'])->name('admin.affiliates.reject');
 
     // Reservation & POS Module Routes
     Route::resource('service-categories', \App\Http\Controllers\ServiceCategoryController::class);

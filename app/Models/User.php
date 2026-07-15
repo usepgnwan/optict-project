@@ -16,6 +16,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
         'password',
         'role_id',
         'branch_id',
@@ -53,6 +54,11 @@ class User extends Authenticatable
         return $this->belongsTo(Branch::class);
     }
 
+    public function affiliate(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Affiliate::class);
+    }
+
     // ─── Role Helpers ────────────────────────────────────────
 
     public function isSuperAdmin(): bool
@@ -73,6 +79,11 @@ class User extends Authenticatable
     public function isManager(): bool
     {
         return $this->role?->name === Role::MANAGER;
+    }
+
+    public function isAffiliator(): bool
+    {
+        return $this->role?->name === Role::AFFILIATOR;
     }
 
     public function hasRole(string ...$roles): bool

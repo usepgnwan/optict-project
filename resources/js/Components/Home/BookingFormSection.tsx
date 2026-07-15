@@ -62,11 +62,22 @@ export default function BookingFormSection({
     const [whatsapp, setWhatsapp] = useState('');
     const [complaint, setComplaint] = useState(activeComplaintTypes[0]?.name || 'Mata Lelah / Sakit Kepala');
     const [date, setDate] = useState('');
+    const [referralCode, setReferralCode] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     // Success Modal State
     const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [savedReservationNumber, setSavedReservationNumber] = useState('');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const track = params.get('track');
+            if (track) {
+                setReferralCode(track);
+            }
+        }
+    }, []);
 
     // Update default selection if activeBookingBranches or activeComplaintTypes loads
     useEffect(() => {
@@ -109,6 +120,7 @@ export default function BookingFormSection({
                 branch_name: selectedBranch.name,
                 date,
                 complaint,
+                referral_code: referralCode,
             },
             {
                 onSuccess: (page: any) => {
@@ -309,6 +321,19 @@ export default function BookingFormSection({
                                     required
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-on-surface uppercase tracking-widest flex items-center justify-between">
+                                <span>Kode Referal (Jika Ada)</span>
+                            </label>
+                            <input
+                                value={referralCode}
+                                onChange={(e) => setReferralCode(e.target.value)}
+                                className="w-full h-14 px-5 rounded-2xl border border-outline-variant bg-surface text-on-surface font-semibold focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none uppercase"
+                                placeholder="PHNX-XXXX"
+                                type="text"
+                            />
                         </div>
 
                         <button

@@ -16,7 +16,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
     const currentRoute = route().current() || '';
 
-    const navSections = [
+    const isAffiliator = user?.role?.name === 'affiliator';
+
+    const adminNavSections = [
         {
             category: 'UTAMA',
             items: [
@@ -69,9 +71,24 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             category: 'PENGATURAN',
             items: [
                 { name: 'Manajemen User & Role', href: route('users.index'), icon: 'manage_accounts', active: currentRoute.startsWith('users.') },
+                { name: 'User Affiliator', href: route('admin.affiliates.index'), icon: 'handshake', active: currentRoute.startsWith('admin.affiliates.') },
             ],
         },
     ];
+
+    const affiliatorNavSections = [
+        {
+            category: 'AFFILIATOR',
+            items: [
+                { name: 'Dashboard Affiliator', href: route('dashboard'), icon: 'dashboard', active: currentRoute === 'dashboard' },
+                { name: 'Riwayat Komisi', href: '#', icon: 'payments', active: false },
+                { name: 'Materi Promosi', href: '#', icon: 'campaign', active: false },
+                { name: 'Pengaturan Akun', href: '#', icon: 'manage_accounts', active: false },
+            ],
+        },
+    ];
+
+    const navSections = isAffiliator ? affiliatorNavSections : adminNavSections;
 
     return (
         <div className="min-h-screen bg-background text-on-surface font-sans transition-colors duration-300 flex">
