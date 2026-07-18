@@ -18,9 +18,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+        $affiliate = $user->affiliate;
+
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
+            'affiliate' => $affiliate,
         ]);
     }
 
@@ -29,13 +33,39 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar
+            if ($user->avatar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            }
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        if ($user->affiliate) {
+            $user->affiliate->update([
+                'bank_name' => $validated['bank_name'] ?? $user->affiliate->bank_name,
+                'bank_account_number' => $validated['bank_account_number'] ?? $user->affiliate->bank_account_number,
+                'bank_account_name' => $validated['bank_account_name'] ?? $user->affiliate->bank_account_name,
+            ]);
+        }
+
+        if ($user->role?->name === 'affiliator') {
+            return Redirect::route('affiliate.settings');
+        }
 
         return Redirect::route('profile.edit');
     }

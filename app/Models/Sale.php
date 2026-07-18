@@ -24,9 +24,11 @@ class Sale extends Model
         'paid_amount',
         'change_amount',
         'status',
+        'affiliate_code',
         'void_reason',
         'voided_by',
         'voided_at',
+        'commission_status',
     ];
 
     protected function casts(): array
@@ -90,5 +92,10 @@ class Sale extends Model
     public function scopeForBranch($query, $branchId)
     {
         return $query->where('branch_id', $branchId);
+    }
+
+    public function affiliate(): BelongsTo
+    {
+        return $this->belongsTo(Affiliate::class, 'affiliate_code', 'referral_code');
     }
 }

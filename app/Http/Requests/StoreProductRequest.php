@@ -38,6 +38,8 @@ class StoreProductRequest extends FormRequest
             'selling_price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:2000',
+            'commission_type' => 'nullable|string|in:percentage,fixed',
+            'commission_amount' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
             'is_active' => 'boolean',
         ];
@@ -55,6 +57,8 @@ class StoreProductRequest extends FormRequest
             'category.required' => 'Kategori wajib dipilih.',
             'selling_price.required' => 'Harga jual wajib diisi.',
             'cost_price.required' => 'Harga modal wajib diisi.',
+            'commission_type.in' => 'Tipe komisi tidak valid.',
+            'commission_amount.numeric' => 'Nominal komisi harus berupa angka.',
             'image.uploaded' => 'Foto gagal diunggah karena ukuran file melebihi batas upload server.',
             'image.image' => 'File harus berupa gambar.',
             'image.mimes' => 'Format foto harus jpg, jpeg, png, atau webp.',

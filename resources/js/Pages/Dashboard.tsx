@@ -1,31 +1,81 @@
 import React, { useState } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { CountUp, ScrollCard } from '@/Components/ReactBits';
 
-export default function Dashboard() {
-    const [selectedPeriod] = useState('01 Jul 2026 - 31 Jul 2026');
+interface DashboardProps {
+    stats: any;
+    financialStats: any;
+    lowStockProducts: any[];
+    outOfStockProducts: any[];
+    recentTransfers: any[];
+    recentAdjustments: any[];
+    stockByBranch: any[];
+    chartData: any[];
+    statusDistribution: any[];
+    recentTransactions: any[];
+    topProducts: any[];
+    topServices: any[];
+    branches: any[];
+    currentBranch: string | number;
+    startDate: string;
+    endDate: string;
+    affiliatorCommissions: any[];
+}
 
-    // Monthly chart data
-    const chartData = [
-        { month: 'Mei 26', value: 110, label: 'Rp 110.0Jt' },
-        { month: 'Jun 26', value: 235, label: 'Rp 235.9Jt' },
-        { month: 'Jul 26', value: 53.3, label: 'Rp 53.3Jt' },
-    ];
+export default function Dashboard({
+    stats,
+    financialStats,
+    chartData = [],
+    statusDistribution = [],
+    recentTransactions = [],
+    topProducts = [],
+    topServices = [],
+    branches = [],
+    currentBranch,
+    startDate,
+    endDate,
+    affiliatorCommissions = [],
+}: DashboardProps) {
+    const [filterStart, setFilterStart] = useState(startDate);
+    const [filterEnd, setFilterEnd] = useState(endDate);
 
-    // Status distribution
-    const statusDistribution = [
-        { name: 'Pending', count: 1, pct: '0%', color: 'bg-amber-400', hex: '#FBBF24' },
-        { name: 'Proses Fitting / Kirim', count: 89, pct: '4%', color: 'bg-blue-500', hex: '#3B82F6' },
-        { name: 'Selesai / Invoice', count: 2033, pct: '96%', color: 'bg-emerald-500', hex: '#10B981' },
-    ];
+    const formatRupiah = (val: number) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(val || 0);
+    };
+
+    const handleFilter = (branchId: string, start: string, end: string) => {
+        router.get(route('dashboard'), { 
+            branch_id: branchId,
+            start_date: start,
+            end_date: end
+        }, { preserveState: true });
+    };
+
+    const maxVal = Math.max(
+        ...chartData.flatMap((d: any) => [d.kacamata || 0, d.layanan || 0, d.komisi || 0]),
+        1000 // minimum scale
+    );
+    
+    const formatYAxis = (val: number) => {
+        if (val >= 1000000000) return 'Rp ' + (val / 1000000000).toFixed(1) + 'M';
+        if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1) + 'Jt';
+        if (val >= 1000) return 'Rp ' + (val / 1000).toFixed(1) + 'Rb';
+        return 'Rp ' + Math.round(val);
+    };
+
+    const yAxisLabels = [maxVal, maxVal * 0.66, maxVal * 0.33].map(v => formatYAxis(v));
 
     return (
         <AdminLayout title="Dashboard | Harmoni by Phoenix Sehat">
             <Head title="Dashboard | Harmoni by Phoenix Sehat" />
 
             {/* Top Page Title & Filter Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
                     <p className="text-[11px] font-bold tracking-widest text-secondary uppercase mb-1">
                         ADMIN PANEL
@@ -35,16 +85,46 @@ export default function Dashboard() {
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <button className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-surface border border-outline-variant rounded-xl shadow-xs text-sm font-semibold text-primary hover:border-primary/40 transition-all cursor-pointer">
-                        <span className="material-symbols-outlined text-[18px] text-secondary">
-                            calendar_month
-                        </span>
-                        <span>{selectedPeriod}</span>
-                        <span className="material-symbols-outlined text-[18px] text-on-surface-variant">
-                            calendar_today
-                        </span>
-                    </button>
+                {/* Filters */}
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 bg-surface border border-outline-variant px-3 py-2 rounded-xl shadow-xs transition-colors hover:border-primary/40">
+                        <span className="material-symbols-outlined text-[18px] text-primary">calendar_today</span>
+                        <div className="flex items-center gap-1">
+                            <input
+                                type="date"
+                                value={filterStart}
+                                onChange={(e) => {
+                                    setFilterStart(e.target.value);
+                                    handleFilter(String(currentBranch), e.target.value, filterEnd);
+                                }}
+                                className="bg-transparent text-sm font-bold text-on-surface focus:outline-none cursor-pointer"
+                            />
+                            <span className="text-on-surface-variant">-</span>
+                            <input
+                                type="date"
+                                value={filterEnd}
+                                onChange={(e) => {
+                                    setFilterEnd(e.target.value);
+                                    handleFilter(String(currentBranch), filterStart, e.target.value);
+                                }}
+                                className="bg-transparent text-sm font-bold text-on-surface focus:outline-none cursor-pointer"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 bg-surface border border-outline-variant px-3 py-2 rounded-xl shadow-xs transition-colors hover:border-primary/40">
+                        <span className="material-symbols-outlined text-[18px] text-primary">storefront</span>
+                        <select
+                            value={String(currentBranch)}
+                            onChange={(e) => handleFilter(e.target.value, filterStart, filterEnd)}
+                            className="bg-transparent text-sm font-bold text-on-surface focus:outline-none cursor-pointer"
+                        >
+                            <option value="all">Semua Cabang</option>
+                            {branches.map((b) => (
+                                <option key={b.id} value={b.id}>{b.name}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -62,7 +142,7 @@ export default function Dashboard() {
                     </div>
                     <div>
                         <h3 className="text-2xl font-extrabold text-primary tracking-tight mb-1">
-                            Rp 399.2Jt
+                            {formatRupiah(financialStats?.totalRevenue)}
                         </h3>
                         <p className="text-xs text-on-surface-variant">
                             semua waktu (success)
@@ -77,12 +157,12 @@ export default function Dashboard() {
                             <span className="material-symbols-outlined text-[20px]">clinical_notes</span>
                         </div>
                         <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
-                            KOMISI DOKTER / TIM
+                            KOMISI AFFILIATOR
                         </p>
                     </div>
                     <div>
                         <h3 className="text-2xl font-extrabold text-primary tracking-tight mb-1">
-                            Rp 318.7Jt
+                            {formatRupiah(financialStats?.totalCommission)}
                         </h3>
                         <p className="text-xs text-on-surface-variant">
                             dari transaksi selesai
@@ -103,10 +183,10 @@ export default function Dashboard() {
                     </div>
                     <div className="relative z-10">
                         <h3 className="text-2xl font-extrabold text-amber-500 tracking-tight mb-1">
-                            Rp 80.5Jt
+                            {formatRupiah(financialStats?.netRevenue)}
                         </h3>
                         <p className="text-xs text-on-surface-variant">
-                            pendapatan - komisi tim
+                            pendapatan - komisi
                         </p>
                     </div>
                 </ScrollCard>
@@ -123,10 +203,10 @@ export default function Dashboard() {
                     </div>
                     <div>
                         <h3 className="text-2xl font-extrabold text-primary tracking-tight mb-1">
-                            Rp 53.3Jt
+                            {chartData.length > 0 ? formatRupiah((chartData[chartData.length - 1].kacamata || 0) + (chartData[chartData.length - 1].layanan || 0)) : formatRupiah(0)}
                         </h3>
                         <p className="text-xs text-on-surface-variant">
-                            Juli 2026
+                            Periode terakhir
                         </p>
                     </div>
                 </ScrollCard>
@@ -143,10 +223,10 @@ export default function Dashboard() {
                     </div>
                     <div>
                         <h3 className="text-2xl font-extrabold text-primary tracking-tight mb-1">
-                            <CountUp end={1933} duration={2} />
+                            <CountUp end={financialStats?.completedReservations || 0} duration={2} />
                         </h3>
                         <p className="text-xs text-on-surface-variant">
-                            91% dari 2.123 reservasi
+                            dari {financialStats?.totalReservations || 0} total reservasi
                         </p>
                     </div>
                 </ScrollCard>
@@ -156,55 +236,78 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 {/* Left: Monthly Revenue Chart */}
                 <div className="lg:col-span-2 bg-surface rounded-3xl border border-outline-variant p-6 lg:p-8 card-shadow flex flex-col">
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
                         <div>
                             <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
-                                GRAFIK PENDAPATAN
+                                GRAFIK TREN
                             </p>
                             <h3 className="text-xl font-bold text-primary">
-                                Pendapatan Per Bulan
+                                Penjualan & Komisi
                             </h3>
                         </div>
-                        <span className="px-3.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-bold text-xs uppercase tracking-wider border border-emerald-500/20">
-                            STATUS SELESAI
-                        </span>
+                        {/* Legend */}
+                        <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                                Kacamata
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                Layanan
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                                Komisi
+                            </div>
+                        </div>
                     </div>
 
                     {/* SVG Chart representation */}
                     <div className="flex-1 min-h-[280px] flex flex-col justify-end pt-4">
-                        {/* Y-Axis Gridlines */}
-                        <div className="relative h-60 flex flex-col justify-between border-b border-outline-variant pb-2">
+                        <div className="relative h-60 flex flex-col justify-between border-b border-outline-variant pb-2 w-full">
+                            {/* Y-Axis Gridlines */}
                             <div className="absolute top-0 w-full border-t border-dashed border-outline-variant/60 flex items-center">
-                                <span className="text-[11px] text-on-surface-variant -mt-5">Rp 280.0Jt</span>
+                                <span className="text-[11px] text-on-surface-variant -mt-5">{yAxisLabels[0]}</span>
                             </div>
                             <div className="absolute top-1/3 w-full border-t border-dashed border-outline-variant/60 flex items-center">
-                                <span className="text-[11px] text-on-surface-variant -mt-5">Rp 210.0Jt</span>
+                                <span className="text-[11px] text-on-surface-variant -mt-5">{yAxisLabels[1]}</span>
                             </div>
                             <div className="absolute top-2/3 w-full border-t border-dashed border-outline-variant/60 flex items-center">
-                                <span className="text-[11px] text-on-surface-variant -mt-5">Rp 140.0Jt</span>
+                                <span className="text-[11px] text-on-surface-variant -mt-5">{yAxisLabels[2]}</span>
                             </div>
 
                             {/* Bar Columns */}
-                            <div className="h-full flex items-end justify-around relative z-10 px-8">
-                                {chartData.map((item, index) => {
-                                    const heightPct = Math.min((item.value / 280) * 100, 100);
+                            <div className="h-full flex items-end justify-around relative z-10 px-2 lg:px-8 mt-6">
+                                {chartData.map((item: any, index: number) => {
+                                    const pctKacamata = Math.max(Math.min(((item.kacamata || 0) / maxVal) * 100, 100), 1); // min 1% to show a sliver
+                                    const pctLayanan = Math.max(Math.min(((item.layanan || 0) / maxVal) * 100, 100), 1);
+                                    const pctKomisi = Math.max(Math.min(((item.komisi || 0) / maxVal) * 100, 100), 1);
+                                    
                                     return (
-                                        <div key={item.month} className="flex flex-col items-center group w-16">
-                                            {/* Tooltip on hover */}
-                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity mb-2 px-2.5 py-1 bg-primary text-on-primary text-xs font-bold rounded-lg shadow-md whitespace-nowrap">
-                                                {item.label}
+                                        <div key={index} className="flex flex-col items-center group flex-1 shrink relative h-full justify-end">
+                                            {/* Tooltip */}
+                                            <div className="opacity-0 group-hover:opacity-100 transition-opacity mb-2 px-3 py-2 bg-surface-variant border border-outline-variant text-on-surface text-xs font-bold rounded-xl shadow-md whitespace-nowrap absolute bottom-full left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+                                                <div className="mb-1 text-primary">{item.label}</div>
+                                                <div className="flex gap-2 text-[10px]">
+                                                    <span className="text-indigo-500">Kacamata:</span> {formatRupiah(item.kacamata)}
+                                                </div>
+                                                <div className="flex gap-2 text-[10px]">
+                                                    <span className="text-emerald-500">Layanan:</span> {formatRupiah(item.layanan)}
+                                                </div>
+                                                <div className="flex gap-2 text-[10px]">
+                                                    <span className="text-purple-500">Komisi:</span> {formatRupiah(item.komisi)}
+                                                </div>
                                             </div>
-                                            {/* Bar */}
-                                            <div
-                                                className={`w-12 rounded-t-xl transition-all duration-700 ${
-                                                    index === 1
-                                                        ? 'bg-gradient-to-t from-primary/80 to-primary shadow-lg shadow-primary/20'
-                                                        : 'bg-gradient-to-t from-secondary/50 to-secondary/80'
-                                                } group-hover:scale-105`}
-                                                style={{ height: `${heightPct}%` }}
-                                            />
-                                            <span className="text-xs font-semibold text-on-surface-variant mt-3">
-                                                {item.month}
+                                            
+                                            {/* Bars */}
+                                            <div className="flex-1 w-full flex items-end justify-center gap-1 mt-8">
+                                                {item.kacamata > 0 && <div className="w-3 rounded-t-lg bg-indigo-500 shadow-md shadow-indigo-500/20 group-hover:opacity-80 transition-all" style={{ height: `${pctKacamata}%` }}></div>}
+                                                {item.layanan > 0 && <div className="w-3 rounded-t-lg bg-emerald-500 shadow-md shadow-emerald-500/20 group-hover:opacity-80 transition-all" style={{ height: `${pctLayanan}%` }}></div>}
+                                                {item.komisi > 0 && <div className="w-3 rounded-t-lg bg-purple-500 shadow-md shadow-purple-500/20 group-hover:opacity-80 transition-all" style={{ height: `${pctKomisi}%` }}></div>}
+                                            </div>
+                                            
+                                            <span className="text-[10px] font-bold text-on-surface-variant mt-3 text-center whitespace-nowrap">
+                                                {item.label}
                                             </span>
                                         </div>
                                     );
@@ -214,93 +317,143 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* Right: Distribution Status Donut Chart */}
-                <div className="bg-surface rounded-3xl border border-outline-variant p-6 lg:p-8 card-shadow flex flex-col justify-between">
-                    <div>
+                {/* Right: Status Distribution Donut Chart */}
+                <div className="bg-surface rounded-3xl border border-outline-variant p-6 lg:p-8 card-shadow flex flex-col">
+                    <div className="mb-8">
                         <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
                             DISTRIBUSI
                         </p>
-                        <h3 className="text-xl font-bold text-primary mb-6">
+                        <h3 className="text-xl font-bold text-primary">
                             Transaksi per Status
                         </h3>
                     </div>
 
-                    {/* SVG Donut Chart */}
-                    <div className="flex justify-center items-center relative my-4">
-                        <svg className="w-52 h-52 transform -rotate-90" viewBox="0 0 120 120">
-                            {/* Background circle */}
-                            <circle
-                                cx="60"
-                                cy="60"
-                                r="45"
-                                fill="transparent"
-                                stroke="currentColor"
-                                className="text-outline-variant"
-                                strokeWidth="18"
-                            />
-                            {/* Segment 1: Selesai (96%) */}
-                            <circle
-                                cx="60"
-                                cy="60"
-                                r="45"
-                                fill="transparent"
-                                stroke="#10B981"
-                                strokeWidth="18"
-                                strokeDasharray="282.7"
-                                strokeDashoffset="28"
-                                strokeLinecap="round"
-                            />
-                            {/* Segment 2: Proses (4%) */}
-                            <circle
-                                cx="60"
-                                cy="60"
-                                r="45"
-                                fill="transparent"
-                                stroke="#3B82F6"
-                                strokeWidth="18"
-                                strokeDasharray="282.7"
-                                strokeDashoffset="265"
-                                strokeLinecap="round"
-                            />
-                            {/* Segment 3: Pending (0.5%) */}
-                            <circle
-                                cx="60"
-                                cy="60"
-                                r="45"
-                                fill="transparent"
-                                stroke="#FBBF24"
-                                strokeWidth="18"
-                                strokeDasharray="282.7"
-                                strokeDashoffset="278"
-                                strokeLinecap="round"
-                            />
-                        </svg>
+                    <div className="flex-1 flex flex-col justify-center">
+                        <div className="relative w-48 h-48 mx-auto mb-8">
+                            <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                                {(() => {
+                                    let currentOffset = 0;
+                                    return statusDistribution.map((status: any, idx: number) => {
+                                        const dashArray = `${status.pct} ${100 - status.pct}`;
+                                        const dashOffset = -currentOffset;
+                                        currentOffset += status.pct;
 
-                        {/* Center donut text */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
-                                TOTAL
-                            </span>
-                            <span className="text-2xl font-extrabold text-primary">
-                                2.123
-                            </span>
+                                        return (
+                                            <circle
+                                                key={idx}
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                fill="transparent"
+                                                stroke={status.hex || '#e2e8f0'}
+                                                strokeWidth="15"
+                                                strokeDasharray={dashArray}
+                                                strokeDashoffset={dashOffset}
+                                                className="transition-all duration-1000"
+                                            />
+                                        );
+                                    });
+                                })()}
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                    TOTAL
+                                </span>
+                                <span className="text-3xl font-black text-primary">
+                                    {financialStats?.totalReservations || 0}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            {statusDistribution.map((status: any, idx: number) => (
+                                <div key={idx} className="flex items-center justify-between text-sm">
+                                    <div className="flex items-center gap-2">
+                                        <span className={`w-3 h-3 rounded-full ${status.color}`}></span>
+                                        <span className="font-semibold text-on-surface">{status.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span className="font-bold text-primary">{status.count}</span>
+                                        <span className="text-xs font-semibold text-on-surface-variant w-8 text-right">
+                                            ({status.pct})
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    {/* Legend Table */}
-                    <div className="space-y-3 pt-4 border-t border-outline-variant">
-                        {statusDistribution.map((item) => (
-                            <div key={item.name} className="flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-2.5">
-                                    <span className={`w-3 h-3 rounded-full ${item.color}`} />
-                                    <span className="font-medium text-on-surface">{item.name}</span>
+            {/* Top 5 Items Grid (Bar Charts) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                {/* Top 5 Kacamata */}
+                <div className="bg-surface rounded-3xl border border-outline-variant p-6 lg:p-8 card-shadow flex flex-col">
+                    <h3 className="text-lg font-bold text-primary mb-6 flex items-center gap-2">
+                        <span className="material-symbols-outlined">analytics</span>
+                        Top 5 Kacamata (Produk)
+                    </h3>
+                    <div className="space-y-5 flex-1">
+                        {topProducts.map((item: any, idx: number) => {
+                            const maxQty = Math.max(...topProducts.map((p: any) => p.total_qty), 1);
+                            const pct = (item.total_qty / maxQty) * 100;
+                            return (
+                                <div key={idx} className="flex flex-col gap-1.5">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-bold text-sm text-on-surface line-clamp-1">{item.item_name}</span>
+                                        <span className="font-black text-sm text-primary">{item.total_qty} <span className="text-[10px] font-bold uppercase text-on-surface-variant">pcs</span></span>
+                                    </div>
+                                    <div className="w-full bg-surface-variant/50 rounded-full h-3 overflow-hidden relative border border-outline-variant/30">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-indigo-500/80 to-indigo-500 rounded-full transition-all duration-1000"
+                                            style={{ width: `${pct}%` }}
+                                        />
+                                    </div>
+                                    <p className="text-[10px] font-bold text-emerald-600 text-right">{formatRupiah(item.total_revenue)}</p>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="font-bold text-primary">{item.count}</span>
-                                    <span className="text-xs text-on-surface-variant font-medium">({item.pct})</span>
-                                </div>
+                            );
+                        })}
+                        {topProducts.length === 0 && (
+                            <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-on-surface-variant/60">
+                                <span className="material-symbols-outlined text-[40px] mb-2">inventory_2</span>
+                                <p className="text-sm font-semibold">Belum ada data penjualan kacamata</p>
                             </div>
-                        ))}
+                        )}
+                    </div>
+                </div>
+
+                {/* Top 5 Layanan */}
+                <div className="bg-surface rounded-3xl border border-outline-variant p-6 lg:p-8 card-shadow flex flex-col">
+                    <h3 className="text-lg font-bold text-primary mb-6 flex items-center gap-2">
+                        <span className="material-symbols-outlined">analytics</span>
+                        Top 5 Layanan Spesialis
+                    </h3>
+                    <div className="space-y-5 flex-1">
+                        {topServices.map((item: any, idx: number) => {
+                            const maxQty = Math.max(...topServices.map((p: any) => p.total_qty), 1);
+                            const pct = (item.total_qty / maxQty) * 100;
+                            return (
+                                <div key={idx} className="flex flex-col gap-1.5">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-bold text-sm text-on-surface line-clamp-1">{item.item_name}</span>
+                                        <span className="font-black text-sm text-primary">{item.total_qty} <span className="text-[10px] font-bold uppercase text-on-surface-variant">kali</span></span>
+                                    </div>
+                                    <div className="w-full bg-surface-variant/50 rounded-full h-3 overflow-hidden relative border border-outline-variant/30">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-emerald-500/80 to-emerald-500 rounded-full transition-all duration-1000"
+                                            style={{ width: `${pct}%` }}
+                                        />
+                                    </div>
+                                    <p className="text-[10px] font-bold text-emerald-600 text-right">{formatRupiah(item.total_revenue)}</p>
+                                </div>
+                            );
+                        })}
+                        {topServices.length === 0 && (
+                            <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-on-surface-variant/60">
+                                <span className="material-symbols-outlined text-[40px] mb-2">health_and_safety</span>
+                                <p className="text-sm font-semibold">Belum ada data penjualan layanan</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -321,51 +474,114 @@ export default function Dashboard() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="border-b border-outline-variant text-xs font-bold text-on-surface-variant uppercase tracking-wider">
-                                <th className="py-3.5 px-4">ID Reservasi</th>
+                                <th className="py-3.5 px-4">Invoice / Res.</th>
                                 <th className="py-3.5 px-4">Pasien / Pelanggan</th>
-                                <th className="py-3.5 px-4">Layanan</th>
+                                <th className="py-3.5 px-4">Affiliator</th>
                                 <th className="py-3.5 px-4">Tanggal</th>
                                 <th className="py-3.5 px-4">Total</th>
                                 <th className="py-3.5 px-4">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-outline-variant/60 text-sm">
-                            <tr className="hover:bg-tertiary/20 transition-colors">
-                                <td className="py-4 px-4 font-bold text-primary">#OP-9382</td>
-                                <td className="py-4 px-4 font-semibold text-on-surface">Bapak Hendra Kusuma</td>
-                                <td className="py-4 px-4 text-on-surface-variant">Pemeriksaan Refraksi &amp; Frame Titanium</td>
-                                <td className="py-4 px-4 text-on-surface-variant">09 Jul 2026</td>
-                                <td className="py-4 px-4 font-bold text-primary">Rp 1.450.000</td>
-                                <td className="py-4 px-4">
-                                    <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-bold text-xs border border-emerald-500/20">
-                                        Selesai
-                                    </span>
-                                </td>
+                            {recentTransactions.map((trx: any, idx: number) => (
+                                <tr key={idx} className="hover:bg-tertiary/20 transition-colors">
+                                    <td className="py-4 px-4 font-bold text-primary">{trx.invoice_number}</td>
+                                    <td className="py-4 px-4 font-semibold text-on-surface">
+                                        {trx.walkin_name || trx.customer?.full_name || 'Walk-in'}
+                                    </td>
+                                     <td className="py-4 px-4">
+                                        {trx.affiliate ? (
+                                            <div className="flex flex-col">
+                                                <span className="font-semibold text-primary">{trx.affiliate.user?.full_name}</span>
+                                                <span className="text-[10px] font-mono text-on-surface-variant">{trx.affiliate.referral_code}</span>
+                                            </div>
+                                        ) : (
+                                            <span className="text-on-surface-variant">-</span>
+                                        )}
+                                    </td>
+                                    <td className="py-4 px-4 text-on-surface-variant">
+                                        {new Date(trx.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                    </td>
+                                    <td className="py-4 px-4 font-bold text-primary">{formatRupiah(Number(trx.grand_total))}</td>
+                                    <td className="py-4 px-4">
+                                        <span className={`px-3 py-1 rounded-full font-bold text-xs border ${
+                                            trx.status === 'completed' 
+                                            ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                            : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                                        }`}>
+                                            {trx.status === 'completed' ? 'Selesai' : trx.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                            {recentTransactions.length === 0 && (
+                                <tr>
+                                    <td colSpan={6} className="py-8 text-center text-on-surface-variant">Belum ada transaksi terbaru</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Affiliator Commission List */}
+            <div className="bg-surface rounded-3xl border border-outline-variant p-6 lg:p-8 card-shadow mb-8">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-bold text-primary flex items-center gap-2">
+                        <span className="material-symbols-outlined">group</span>
+                        Pendapatan Komisi Affiliator
+                    </h3>
+                    <span className="text-xs text-on-surface-variant font-semibold">{affiliatorCommissions.length} transaksi referral</span>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left min-w-[750px]">
+                        <thead>
+                            <tr className="border-b-2 border-outline-variant">
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider">Tanggal</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider">Invoice</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider">Affiliator</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider">Pasien</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider">Cabang</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider text-right">Nilai Transaksi</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider text-right">Komisi</th>
+                                <th className="py-3 px-4 text-xs font-bold text-on-surface uppercase tracking-wider">Status</th>
                             </tr>
-                            <tr className="hover:bg-tertiary/20 transition-colors">
-                                <td className="py-4 px-4 font-bold text-primary">#OP-9381</td>
-                                <td className="py-4 px-4 font-semibold text-on-surface">Ibu Clara Wijaya</td>
-                                <td className="py-4 px-4 text-on-surface-variant">Home Service Exclusive (Lensa Progresif)</td>
-                                <td className="py-4 px-4 text-on-surface-variant">09 Jul 2026</td>
-                                <td className="py-4 px-4 font-bold text-primary">Rp 2.150.000</td>
-                                <td className="py-4 px-4">
-                                    <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 font-bold text-xs border border-blue-500/20">
-                                        Proses Fitting
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr className="hover:bg-tertiary/20 transition-colors">
-                                <td className="py-4 px-4 font-bold text-primary">#OP-9380</td>
-                                <td className="py-4 px-4 font-semibold text-on-surface">Dina Permata</td>
-                                <td className="py-4 px-4 text-on-surface-variant">Konsultasi Lensa Spesialis Bluechromic</td>
-                                <td className="py-4 px-4 text-on-surface-variant">08 Jul 2026</td>
-                                <td className="py-4 px-4 font-bold text-primary">Rp 980.000</td>
-                                <td className="py-4 px-4">
-                                    <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-bold text-xs border border-emerald-500/20">
-                                        Selesai
-                                    </span>
-                                </td>
-                            </tr>
+                        </thead>
+                        <tbody>
+                            {affiliatorCommissions.length > 0 ? (
+                                affiliatorCommissions.map((row: any) => (
+                                    <tr key={row.id} className="border-b border-outline-variant/30 hover:bg-surface-variant/30 transition-colors">
+                                        <td className="py-3.5 px-4 text-sm text-on-surface-variant whitespace-nowrap">{row.date}</td>
+                                        <td className="py-3.5 px-4 text-sm font-mono font-bold text-primary whitespace-nowrap">{row.invoice}</td>
+                                        <td className="py-3.5 px-4">
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-sm text-on-surface">{row.affiliate_name}</span>
+                                                <span className="text-[10px] font-mono text-on-surface-variant bg-surface-variant/50 px-1.5 py-0.5 rounded w-fit">{row.referral_code}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm font-semibold text-on-surface">{row.customer}</td>
+                                        <td className="py-3.5 px-4 text-sm text-on-surface-variant">{row.branch}</td>
+                                        <td className="py-3.5 px-4 text-sm font-bold text-on-surface text-right whitespace-nowrap">{formatRupiah(row.grand_total)}</td>
+                                        <td className="py-3.5 px-4 text-sm font-black text-emerald-600 text-right whitespace-nowrap">{formatRupiah(row.commission)}</td>
+                                        <td className="py-3.5 px-4">
+                                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                                row.status === 'Menunggu'
+                                                    ? 'bg-amber-400/10 text-amber-600 border border-amber-400/30'
+                                                    : 'bg-gray-400/10 text-gray-500 border border-gray-400/30'
+                                            }`}>
+                                                {row.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={8} className="py-12 text-center text-on-surface-variant text-sm font-medium">
+                                        <span className="material-symbols-outlined text-[40px] block mb-2 text-on-surface-variant/30">group_off</span>
+                                        Belum ada transaksi dari referral affiliator pada periode ini.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

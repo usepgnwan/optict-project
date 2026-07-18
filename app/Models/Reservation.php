@@ -19,6 +19,7 @@ class Reservation extends Model
         'reservation_time',
         'assigned_staff_id',
         'status',
+        'affiliate_code',
         'notes',
     ];
 

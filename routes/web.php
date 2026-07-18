@@ -50,7 +50,20 @@ Route::get('/layanan', [\App\Http\Controllers\SpecialistServiceController::class
 Route::get('/layanan/{slug}', [\App\Http\Controllers\SpecialistServiceController::class, 'publicShow'])->name('layanan.show');
 
 Route::get('/affiliate', function () {
-    return Inertia::render('Affiliate');
+    $products = \App\Models\Product::active()
+        ->whereNotNull('commission_amount')
+        ->where('commission_amount', '>', 0)
+        ->get(['name', 'category', 'commission_amount', 'commission_type']);
+        
+    $services = \App\Models\Service::active()
+        ->whereNotNull('commission_amount')
+        ->where('commission_amount', '>', 0)
+        ->get(['name', 'commission_amount', 'commission_type']);
+
+    return Inertia::render('Affiliate', [
+        'products' => $products,
+        'services' => $services,
+    ]);
 })->name('affiliate');
 Route::post('/affiliate', [\App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
 
@@ -70,11 +83,38 @@ Route::get('/katalog-kacamata/{slug}', function ($slug) {
     ]);
 })->name('catalog.show');
 
-// Authenticated & Verified Management System Routes
+// ═══════════════════════════════════════════════════════════════
+// AFFILIATOR ROUTES — accessible by affiliator role only
+// ═══════════════════════════════════════════════════════════════
+Route::middleware(['auth', 'verified', 'role:affiliator'])->group(function () {
+    Route::get('/affiliate/settings', [ProfileController::class, 'edit'])->name('affiliate.settings');
+    Route::patch('/affiliate/settings', [ProfileController::class, 'update'])->name('affiliate.settings.update');
+});
+
+// ═══════════════════════════════════════════════════════════════
+// AUTHENTICATED ROUTES — ALL LOGGED-IN USERS
+// ═══════════════════════════════════════════════════════════════
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard
+    // Dashboard (role-adaptive: shows different content based on role)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Profile (accessible by ALL roles)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Affiliate commission history — RBAC handled inside the controller
+    Route::get('/riwayat/affiliate', [\App\Http\Controllers\AffiliateHistoryController::class, 'index'])->name('riwayat.affiliate');
+
+    // Marketing Kits index — RBAC handled inside the controller (read-only for affiliators)
+    Route::get('/marketing-kits', [\App\Http\Controllers\Admin\MarketingKitController::class, 'index'])->name('marketing-kits.index');
+});
+
+
+// ═══════════════════════════════════════════════════════════════
+// ADMIN/STAFF ROUTES — accessible by all non-affiliator roles
+// ═══════════════════════════════════════════════════════════════
+Route::middleware(['auth', 'verified', 'role:super_admin,warehouse_admin,branch_admin,manager'])->group(function () {
     // Master Data
     Route::resource('branches', BranchController::class);
     Route::resource('products', ProductController::class);
@@ -107,10 +147,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User Management
     Route::resource('users', UserManagementController::class)->except(['create', 'edit', 'show']);
 
-    // Affiliate Management
+    // Affiliate Management (Admin manages affiliates)
     Route::get('/affiliates', [\App\Http\Controllers\Admin\AffiliateManagementController::class, 'index'])->name('admin.affiliates.index');
     Route::post('/affiliates/{affiliate}/approve', [\App\Http\Controllers\Admin\AffiliateManagementController::class, 'approve'])->name('admin.affiliates.approve');
     Route::post('/affiliates/{affiliate}/reject', [\App\Http\Controllers\Admin\AffiliateManagementController::class, 'reject'])->name('admin.affiliates.reject');
+
+    // Affiliate commission history status updates (Admin side)
+    Route::post('/riwayat/affiliate/{sale}/status', [\App\Http\Controllers\AffiliateHistoryController::class, 'updateStatus'])->name('riwayat.affiliate.status');
+
+    // Marketing Kits — Admin actions (store, update, destroy)
+    Route::post('/marketing-kits', [\App\Http\Controllers\Admin\MarketingKitController::class, 'store'])->name('marketing-kits.store');
+    Route::put('/marketing-kits/{marketing_kit}', [\App\Http\Controllers\Admin\MarketingKitController::class, 'update'])->name('marketing-kits.update');
+    Route::delete('/marketing-kits/{marketing_kit}', [\App\Http\Controllers\Admin\MarketingKitController::class, 'destroy'])->name('marketing-kits.destroy');
 
     // Reservation & POS Module Routes
     Route::resource('service-categories', \App\Http\Controllers\ServiceCategoryController::class);
@@ -128,11 +176,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/pos/checkout', [\App\Http\Controllers\POSController::class, 'checkout'])->name('pos.checkout');
     Route::post('/pos/sales/{sale}/void', [\App\Http\Controllers\POSController::class, 'voidSale'])->name('pos.void');
     Route::get('/pos/dashboard', [\App\Http\Controllers\POSDashboardController::class, 'index'])->name('pos.dashboard');
-
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
+

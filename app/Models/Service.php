@@ -15,6 +15,8 @@ class Service extends Model
         'duration_minutes',
         'price',
         'is_active',
+        'commission_type',
+        'commission_amount',
     ];
 
     protected function casts(): array
@@ -23,6 +25,7 @@ class Service extends Model
             'duration_minutes' => 'integer',
             'price' => 'decimal:2',
             'is_active' => 'boolean',
+            'commission_amount' => 'decimal:2',
         ];
     }
 

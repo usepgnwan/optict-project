@@ -39,6 +39,8 @@ export default function ProductsIndex({ products, filters, categories }: Product
         lens_type: 'single_vision',
         selling_price: 0,
         cost_price: 0,
+        commission_type: 'percentage' as 'percentage' | 'fixed' | null,
+        commission_amount: 0 as number | null,
         description: '',
         image: null as File | null,
         is_active: true,
@@ -85,6 +87,8 @@ export default function ProductsIndex({ products, filters, categories }: Product
             lens_type: product.lens_type || 'single_vision',
             selling_price: product.selling_price,
             cost_price: product.cost_price,
+            commission_type: product.commission_type || 'percentage',
+            commission_amount: product.commission_amount || 0,
             description: product.description || '',
             image: null,
             is_active: product.is_active,
@@ -254,7 +258,7 @@ export default function ProductsIndex({ products, filters, categories }: Product
             ),
         },
         {
-            header: 'Harga Jual / Modal',
+            header: 'Harga Jual / Modal / Komisi',
             key: 'price',
             render: (item: Product) => (
                 <div>
@@ -264,6 +268,15 @@ export default function ProductsIndex({ products, filters, categories }: Product
                     <p className="text-xs text-on-surface-variant">
                         Modal: Rp {Number(item.cost_price).toLocaleString('id-ID')}
                     </p>
+                    {(item.commission_type && item.commission_amount) ? (
+                        <p className="text-xs text-emerald-600 font-semibold mt-0.5">
+                            Komisi Affiliate: {item.commission_type === 'percentage'
+                                ? `${Number(item.commission_amount)}%`
+                                : `Rp ${Number(item.commission_amount).toLocaleString('id-ID')}`}
+                        </p>
+                    ) : (
+                        <p className="text-xs text-on-surface-variant/50 italic mt-0.5">Tanpa Komisi</p>
+                    )}
                 </div>
             ),
         },
@@ -521,6 +534,52 @@ export default function ProductsIndex({ products, filters, categories }: Product
                                 required
                             />
                             {errors.cost_price && <p className="text-xs text-rose-500 mt-1">{errors.cost_price}</p>}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                                Tipe Komisi Affiliate
+                            </label>
+                            <SelectSearch
+                                value={data.commission_type || 'percentage'}
+                                onChange={(val) => setData('commission_type', val as 'percentage' | 'fixed')}
+                                placeholder="Pilih Tipe Komisi"
+                            >
+                                <option value="percentage">Persentase (%)</option>
+                                <option value="fixed">Nominal (Rp)</option>
+                            </SelectSearch>
+                            {/* @ts-ignore */}
+                            {errors.commission_type && <p className="text-xs text-rose-500 mt-1">{errors.commission_type}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                                Besaran Komisi
+                            </label>
+                            {data.commission_type === 'fixed' ? (
+                                <RupiahInput
+                                    value={data.commission_amount || 0}
+                                    onChange={(val) => setData('commission_amount', val)}
+                                    placeholder="0"
+                                />
+                            ) : (
+                                <div className="relative">
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        step="0.01"
+                                        value={data.commission_amount || 0}
+                                        onChange={(e) => setData('commission_amount', parseFloat(e.target.value) || 0)}
+                                        className="w-full pl-3.5 pr-8 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary"
+                                    />
+                                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">%</span>
+                                </div>
+                            )}
+                            {/* @ts-ignore */}
+                            {errors.commission_amount && <p className="text-xs text-rose-500 mt-1">{errors.commission_amount}</p>}
                         </div>
                     </div>
 

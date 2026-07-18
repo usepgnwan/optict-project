@@ -68,10 +68,17 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             ],
         },
         {
+            category: 'AFFILIATOR',
+            items: [
+                { name: 'Data Affiliator', href: route('admin.affiliates.index'), icon: 'handshake', active: currentRoute.startsWith('admin.affiliates.') },
+                { name: 'Riwayat Komisi', href: route('riwayat.affiliate'), icon: 'receipt_long', active: currentRoute.startsWith('riwayat.affiliate') },
+                { name: 'Materi Promosi', href: route('marketing-kits.index'), icon: 'campaign', active: currentRoute.startsWith('marketing-kits.') },
+            ],
+        },
+        {
             category: 'PENGATURAN',
             items: [
                 { name: 'Manajemen User & Role', href: route('users.index'), icon: 'manage_accounts', active: currentRoute.startsWith('users.') },
-                { name: 'User Affiliator', href: route('admin.affiliates.index'), icon: 'handshake', active: currentRoute.startsWith('admin.affiliates.') },
             ],
         },
     ];
@@ -81,9 +88,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             category: 'AFFILIATOR',
             items: [
                 { name: 'Dashboard Affiliator', href: route('dashboard'), icon: 'dashboard', active: currentRoute === 'dashboard' },
-                { name: 'Riwayat Komisi', href: '#', icon: 'payments', active: false },
-                { name: 'Materi Promosi', href: '#', icon: 'campaign', active: false },
-                { name: 'Pengaturan Akun', href: '#', icon: 'manage_accounts', active: false },
+                { name: 'Riwayat Komisi', href: route('riwayat.affiliate'), icon: 'payments', active: currentRoute.startsWith('riwayat.affiliate') },
+                { name: 'Materi Promosi', href: route('marketing-kits.index'), icon: 'campaign', active: currentRoute.startsWith('marketing-kits.') },
+                { name: 'Pengaturan Akun', href: route('affiliate.settings'), icon: 'manage_accounts', active: currentRoute.startsWith('affiliate.settings') },
             ],
         },
     ];

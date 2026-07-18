@@ -34,6 +34,8 @@ class Product extends Model
         'selling_price',
         'cost_price',
         'description',
+        'commission_type',
+        'commission_amount',
         'image_path',
         'is_active',
     ];
@@ -47,6 +49,7 @@ class Product extends Model
         return [
             'selling_price' => 'decimal:2',
             'cost_price' => 'decimal:2',
+            'commission_amount' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }

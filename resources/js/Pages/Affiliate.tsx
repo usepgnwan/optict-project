@@ -3,7 +3,7 @@ import HomeLayout from '@/Layouts/HomeLayout';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import CtaSection from '@/Components/Home/CtaSection';
 
-export default function Affiliate() {
+export default function Affiliate({ products = [], services = [] }: { products?: any[], services?: any[] }) {
     const { flash } = usePage<any>().props;
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -149,21 +149,66 @@ export default function Affiliate() {
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            <tr>
-                                <td className="p-4 border-b border-outline-variant font-bold text-on-surface">Kacamata</td>
-                                <td className="p-4 border-b border-outline-variant text-on-surface-variant">Pembelian Frame & Lensa Premium</td>
-                                <td className="p-4 border-b border-outline-variant text-on-surface"><strong className="text-primary">Rp 100.000</strong> / Transaksi</td>
-                            </tr>
-                            <tr>
-                                <td className="p-4 border-b border-outline-variant font-bold text-on-surface">Layanan</td>
-                                <td className="p-4 border-b border-outline-variant text-on-surface-variant">Pemeriksaan Mata (Home Service)</td>
-                                <td className="p-4 border-b border-outline-variant text-on-surface"><strong className="text-primary">Rp 75.000</strong> / Kunjungan</td>
-                            </tr>
-                            <tr>
-                                <td className="p-4 font-bold text-on-surface">Aksesoris</td>
-                                <td className="p-4 text-on-surface-variant">Cairan Softlens, Lap Anti Embun, dll.</td>
-                                <td className="p-4 text-on-surface"><strong className="text-primary">20%</strong> dari Total Harga</td>
-                            </tr>
+                            {services.length > 0 || products.length > 0 ? (
+                                <>
+                                    {/* Services */}
+                                    {services.map((item: any, idx: number) => (
+                                        <tr key={`service-${idx}`}>
+                                            <td className="p-4 border-b border-outline-variant font-bold text-on-surface">Layanan</td>
+                                            <td className="p-4 border-b border-outline-variant text-on-surface-variant">{item.name}</td>
+                                            <td className="p-4 border-b border-outline-variant text-on-surface">
+                                                <strong className="text-primary">
+                                                    {item.commission_type === 'percentage' 
+                                                        ? `${item.commission_amount}%` 
+                                                        : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(item.commission_amount))
+                                                    }
+                                                </strong> / Kunjungan
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {/* Products */}
+                                    {products.map((item: any, idx: number) => {
+                                        let catLabel = 'Produk';
+                                        if (item.category === 'frame') catLabel = 'Kacamata (Frame)';
+                                        else if (item.category === 'lens') catLabel = 'Kacamata (Lensa)';
+                                        else if (item.category === 'accessory') catLabel = 'Aksesoris';
+                                        else if (item.category === 'package') catLabel = 'Paket';
+
+                                        return (
+                                            <tr key={`product-${idx}`}>
+                                                <td className="p-4 border-b border-outline-variant font-bold text-on-surface">{catLabel}</td>
+                                                <td className="p-4 border-b border-outline-variant text-on-surface-variant">{item.name}</td>
+                                                <td className="p-4 border-b border-outline-variant text-on-surface">
+                                                    <strong className="text-primary">
+                                                        {item.commission_type === 'percentage' 
+                                                            ? `${item.commission_amount}%` 
+                                                            : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(item.commission_amount))
+                                                        }
+                                                    </strong> / Transaksi
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </>
+                            ) : (
+                                <>
+                                    <tr>
+                                        <td className="p-4 border-b border-outline-variant font-bold text-on-surface">Kacamata</td>
+                                        <td className="p-4 border-b border-outline-variant text-on-surface-variant">Pembelian Frame & Lensa Premium</td>
+                                        <td className="p-4 border-b border-outline-variant text-on-surface"><strong className="text-primary">Rp 100.000</strong> / Transaksi</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-4 border-b border-outline-variant font-bold text-on-surface">Layanan</td>
+                                        <td className="p-4 border-b border-outline-variant text-on-surface-variant">Pemeriksaan Mata (Home Service)</td>
+                                        <td className="p-4 border-b border-outline-variant text-on-surface"><strong className="text-primary">Rp 75.000</strong> / Kunjungan</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-4 font-bold text-on-surface">Aksesoris</td>
+                                        <td className="p-4 text-on-surface-variant">Cairan Softlens, Lap Anti Embun, dll.</td>
+                                        <td className="p-4 text-on-surface"><strong className="text-primary">20%</strong> dari Total Harga</td>
+                                    </tr>
+                                </>
+                            )}
                         </tbody>
                     </table>
                 </div>
