@@ -34,7 +34,12 @@ class BookingSubmissionController extends Controller
 
         $complaintText = $request->complaint ?: 'Pemeriksaan Mata';
         $branchNote = !is_numeric($request->branch_id) ? " [Layanan Pilihan: " . ($request->branch_name ?: $request->branch_id) . "]" : "";
-        $referralNote = $request->referral_code ? "\nKode Referal: " . strtoupper($request->referral_code) : "";
+        
+        // Resolve referral code from request, session, or cookie
+        $resolvedReferral = $request->referral_code ?: session('affiliate_track_code') ?: $request->cookie('affiliate_track_code');
+        $resolvedReferral = $resolvedReferral ? strtoupper($resolvedReferral) : null;
+        
+        $referralNote = $resolvedReferral ? "\nKode Referal: " . $resolvedReferral : "";
 
         $reservation = $this->reservationService->createReservation([
             'reservation_type' => 'Online',
@@ -44,6 +49,7 @@ class BookingSubmissionController extends Controller
             'reservation_date' => $request->date,
             'reservation_time' => $request->time ?? '10:00',
             'status' => 'Waiting',
+            'affiliate_code' => $resolvedReferral,
             'notes' => "Tipe Keluhan / Kebutuhan: " . $complaintText . $branchNote . $referralNote,
             'items' => [],
         ]);

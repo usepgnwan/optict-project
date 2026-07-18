@@ -21,6 +21,22 @@ export interface Branch {
     updated_at?: string;
 }
 
+export interface Service {
+    id: number;
+    service_code: string;
+    name: string;
+    service_category_id?: number | null;
+    description?: string | null;
+    duration_minutes: number;
+    price: number | string;
+    is_active: boolean;
+    commission_type?: 'percentage' | 'fixed' | null;
+    commission_amount?: number | string | null;
+    category?: { id: number; name: string };
+    created_at?: string;
+    updated_at?: string;
+}
+
 export interface CentralInventory {
     id: number;
     product_id: number;
@@ -54,6 +70,8 @@ export interface Product {
     formatted_selling_price?: string;
     formatted_cost_price?: string;
     description?: string;
+    commission_type?: 'percentage' | 'fixed' | null;
+    commission_amount?: number | null;
     image_path?: string;
     is_active: boolean;
     central_inventory?: CentralInventory;

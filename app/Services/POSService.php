@@ -36,6 +36,7 @@ class POSService
                 'grand_total' => $data['grand_total'] ?? 0,
                 'paid_amount' => $data['paid_amount'] ?? 0,
                 'change_amount' => $data['change_amount'] ?? 0,
+                'affiliate_code' => $data['affiliate_code'] ?? null,
                 'status' => 'completed',
             ]);
 

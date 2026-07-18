@@ -49,6 +49,8 @@ export default function ServicesIndex({ services, categories, filters }: Service
         description: '',
         duration_minutes: 30,
         price: 0,
+        commission_type: '' as 'percentage' | 'fixed' | '',
+        commission_amount: '' as number | string,
         is_active: true,
     });
 
@@ -76,6 +78,8 @@ export default function ServicesIndex({ services, categories, filters }: Service
             description: service.description || '',
             duration_minutes: service.duration_minutes,
             price: service.price,
+            commission_type: service.commission_type || '',
+            commission_amount: service.commission_amount || '',
             is_active: service.is_active,
         });
         setShowModal(true);
@@ -154,6 +158,22 @@ export default function ServicesIndex({ services, categories, filters }: Service
                     {formatRupiah(Number(service.price))}
                 </span>
             ),
+        },
+        {
+            header: 'Komisi Affiliate',
+            key: 'commission',
+            render: (service: Service) => {
+                if (!service.commission_type || !service.commission_amount) {
+                    return <span className="text-on-surface-variant text-xs italic">—</span>;
+                }
+                return (
+                    <span className="font-bold text-amber-600 bg-amber-500/10 px-2 py-1 rounded-md text-xs whitespace-nowrap">
+                        {service.commission_type === 'percentage' 
+                            ? `${service.commission_amount}%` 
+                            : formatRupiah(Number(service.commission_amount))}
+                    </span>
+                );
+            },
         },
         {
             header: 'Status',
@@ -308,6 +328,39 @@ export default function ServicesIndex({ services, categories, filters }: Service
                                 className="w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary font-bold"
                                 required
                             />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                                Tipe Komisi Affiliate
+                            </label>
+                            <select
+                                value={data.commission_type}
+                                onChange={(e) => setData('commission_type', e.target.value as any)}
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary"
+                            >
+                                <option value="">Tanpa Komisi</option>
+                                <option value="percentage">Persentase (%)</option>
+                                <option value="fixed">Nominal Tetap (Rp)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5">
+                                Besaran Komisi
+                            </label>
+                            <input
+                                type="number"
+                                value={data.commission_amount}
+                                onChange={(e) => setData('commission_amount', e.target.value ? Number(e.target.value) : '')}
+                                min={0}
+                                disabled={!data.commission_type}
+                                placeholder={data.commission_type === 'percentage' ? 'Cth: 10' : data.commission_type === 'fixed' ? 'Cth: 20000' : '-'}
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm focus:outline-none focus:border-primary font-bold disabled:opacity-50"
+                            />
+                            {errors.commission_amount && <p className="text-xs text-rose-500 mt-1">{errors.commission_amount}</p>}
                         </div>
                     </div>
 

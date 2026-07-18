@@ -33,4 +33,14 @@ class Affiliate extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function sales(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Sale::class, 'affiliate_code', 'referral_code');
+    }
+
+    public function clicks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AffiliateClick::class);
+    }
 }

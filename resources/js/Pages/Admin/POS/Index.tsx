@@ -49,6 +49,7 @@ interface Reservation {
         price: number;
         service?: Service;
     }[];
+    affiliate_code?: string | null;
 }
 
 interface PaymentMethod {
@@ -131,6 +132,7 @@ export default function POSIndex({
     const [walkinName, setWalkinName] = useState('');
     const [walkinPhone, setWalkinPhone] = useState('');
     const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+    const [affiliateCode, setAffiliateCode] = useState('');
 
     // Cart State
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -278,6 +280,12 @@ export default function POSIndex({
         setSelectedReservation(res);
         if (res.customer) setSelectedCustomer(res.customer);
 
+        if (res.affiliate_code) {
+            setAffiliateCode(res.affiliate_code);
+        } else {
+            setAffiliateCode('');
+        }
+
         const newCart: CartItem[] = [];
         res.items?.forEach((item) => {
             newCart.push({
@@ -361,6 +369,7 @@ export default function POSIndex({
                 grand_total: grandTotal,
                 paid_amount: totalPaidAmount,
                 change_amount: changeAmount,
+                affiliate_code: affiliateCode || null,
                 items: cartItems.map((i) => ({
                     item_type: i.item_type,
                     service_id: i.service_id || null,
@@ -388,6 +397,7 @@ export default function POSIndex({
                     setSelectedReservation(null);
                     setWalkinName('');
                     setWalkinPhone('');
+                    setAffiliateCode('');
 
                     if (page?.props?.flash?.completed_sale_id) {
                         router.reload();
@@ -621,6 +631,20 @@ export default function POSIndex({
                                     </div>
                                 </div>
                             )}
+                        </div>
+
+                        {/* Affiliate Code Area */}
+                        <div className="w-full xl:w-56 shrink-0 border-t xl:border-t-0 xl:border-l border-outline-variant pt-3 xl:pt-0 xl:pl-4 mt-2 xl:mt-0 flex flex-col justify-center">
+                            <label className="block text-[10px] uppercase tracking-wider font-bold text-on-surface-variant mb-1">
+                                Kode Affiliate
+                            </label>
+                            <input
+                                type="text"
+                                value={affiliateCode}
+                                onChange={(e) => setAffiliateCode(e.target.value.toUpperCase())}
+                                placeholder="Kosong / Cth: REF-01"
+                                className="w-full px-3 py-2 rounded-xl bg-surface-variant/50 border border-outline-variant text-sm font-bold uppercase focus:outline-none focus:border-primary"
+                            />
                         </div>
                     </div>
                 </div>

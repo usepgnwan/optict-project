@@ -91,8 +91,29 @@ class ProductController extends Controller
     {
         $product->load(['centralInventory', 'branchInventories.branch']);
 
+        $transactions = \App\Models\SaleItem::where('product_id', $product->id)
+            ->with(['sale.branch', 'sale.customer'])
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'invoice_number' => $item->sale->invoice_number,
+                    'date' => $item->created_at->format('d M Y H:i'),
+                    'branch' => $item->sale->branch ? $item->sale->branch->name : 'Pusat',
+                    'branch_id' => $item->sale->branch_id,
+                    'customer_name' => $item->sale->customer ? $item->sale->customer->name : $item->sale->walkin_name,
+                    'qty' => $item->qty,
+                    'unit_price' => $item->unit_price,
+                    'subtotal' => $item->subtotal,
+                    'status' => $item->sale->status,
+                ];
+            });
+
         return Inertia::render('Admin/Products/Show', [
             'product' => $product,
+            'transactions' => $transactions,
+            'branches' => \App\Models\Branch::active()->get(),
         ]);
     }
 

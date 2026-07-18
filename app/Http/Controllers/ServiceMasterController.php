@@ -46,6 +46,8 @@ class ServiceMasterController extends Controller
             'duration_minutes' => 'required|integer|min:5',
             'price' => 'required|numeric|min:0',
             'is_active' => 'boolean',
+            'commission_type' => 'nullable|in:percentage,fixed',
+            'commission_amount' => 'nullable|numeric|min:0',
         ]);
 
         Service::create($validated);
@@ -63,6 +65,8 @@ class ServiceMasterController extends Controller
             'duration_minutes' => 'required|integer|min:5',
             'price' => 'required|numeric|min:0',
             'is_active' => 'boolean',
+            'commission_type' => 'nullable|in:percentage,fixed',
+            'commission_amount' => 'nullable|numeric|min:0',
         ]);
 
         $service->update($validated);

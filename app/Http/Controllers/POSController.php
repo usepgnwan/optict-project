@@ -76,6 +76,7 @@ class POSController extends Controller
             'grand_total' => 'required|numeric|min:0',
             'paid_amount' => 'required|numeric|min:0',
             'change_amount' => 'required|numeric|min:0',
+            'affiliate_code' => 'nullable|string|max:50',
             'items' => 'required|array|min:1',
             'items.*.item_type' => 'required|in:service,product',
             'items.*.product_id' => 'nullable|exists:products,id',

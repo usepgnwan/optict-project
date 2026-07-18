@@ -3,10 +3,11 @@ import { Head, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import PageHeader from '@/Components/Admin/PageHeader';
 import ReceiptModal from './ReceiptModal';
+import SaleDetailModal from './SaleDetailModal';
 
 interface KPIProps {
-    todays_reservations: number;
-    todays_revenue: number;
+    period_reservations: number;
+    period_revenue: number;
     completed_reservations: number;
     cancelled_reservations: number;
 }
@@ -30,8 +31,11 @@ interface DashboardProps {
     salesByBranch: SalesByBranch[];
     recentReservations: any[];
     recentSales?: any[];
+    topAffiliates?: any[];
     branches: any[];
     currentBranch: string | number;
+    startDate: string;
+    endDate: string;
 }
 
 export default function POSDashboard({
@@ -41,10 +45,17 @@ export default function POSDashboard({
     salesByBranch,
     recentReservations,
     recentSales = [],
+    topAffiliates = [],
     branches,
     currentBranch,
+    startDate,
+    endDate,
 }: DashboardProps) {
     const [selectedSaleToPrint, setSelectedSaleToPrint] = useState<any>(null);
+    const [selectedSaleToView, setSelectedSaleToView] = useState<any>(null);
+
+    const [filterStart, setFilterStart] = useState(startDate);
+    const [filterEnd, setFilterEnd] = useState(endDate);
 
     const formatRupiah = (val: number) => {
         return new Intl.NumberFormat('id-ID', {
@@ -54,39 +65,39 @@ export default function POSDashboard({
         }).format(val);
     };
 
-    const handleBranchFilter = (val: string) => {
-        router.get(route('pos.dashboard'), { branch_id: val }, { preserveState: true });
+    const handleFilter = (branchId: string, start: string, end: string) => {
+        router.get(route('pos.dashboard'), { 
+            branch_id: branchId,
+            start_date: start,
+            end_date: end
+        }, { preserveState: true });
     };
 
     return (
         <AdminLayout>
             <Head title="POS & Reservation Analytics - Harmoni by Phoeinx Sehat" />
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div className="mb-6">
                 <PageHeader
                     title="POS & Reservation Analytics Dashboard"
                     subtitle="Laporan eksekutif real-time reservasi harian dan pendapatan kasir POS per cabang"
                     icon="leaderboard"
                 />
+            </div>
 
-                {/* Controls */}
-                <div className="flex items-center gap-3">
-                    {/* Print Dashboard Button */}
-                    <button
-                        onClick={() => window.print()}
-                        className="px-3.5 py-2 rounded-xl bg-primary text-on-primary font-bold text-xs flex items-center gap-1.5 shadow-xs hover:bg-primary/90 cursor-pointer"
-                    >
-                        <span className="material-symbols-outlined text-[18px]">print</span>
-                        <span>Cetak Laporan</span>
-                    </button>
-
-                    {/* Branch Switcher */}
-                    <div className="flex items-center gap-2 bg-surface-variant px-3 py-1.5 rounded-xl border border-outline-variant">
-                        <span className="material-symbols-outlined text-[18px] text-primary">storefront</span>
+            {/* Controls in a Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+                {/* Branch Switcher */}
+                <div className="bg-surface rounded-2xl border border-outline-variant p-4 shadow-xs flex items-center gap-3 transition-colors hover:border-primary/30">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-[20px]">storefront</span>
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Cabang Optik</label>
                         <select
                             value={String(currentBranch)}
-                            onChange={(e) => handleBranchFilter(e.target.value)}
-                            className="bg-transparent text-sm font-bold text-on-surface focus:outline-none cursor-pointer"
+                            onChange={(e) => handleFilter(e.target.value, filterStart, filterEnd)}
+                            className="bg-transparent text-sm font-black text-on-surface focus:outline-none cursor-pointer w-full -ml-1 mt-0.5"
                         >
                             <option value="all">Semua Cabang Optik</option>
                             {branches.map((b) => (
@@ -97,6 +108,52 @@ export default function POSDashboard({
                         </select>
                     </div>
                 </div>
+
+                {/* Date Filters */}
+                <div className="bg-surface rounded-2xl border border-outline-variant p-4 shadow-xs flex items-center gap-3 transition-colors hover:border-primary/30">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-[20px]">calendar_today</span>
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Rentang Waktu</label>
+                        <div className="flex items-center gap-2 mt-0.5">
+                            <input
+                                type="date"
+                                value={filterStart}
+                                onChange={(e) => {
+                                    setFilterStart(e.target.value);
+                                    handleFilter(String(currentBranch), e.target.value, filterEnd);
+                                }}
+                                className="bg-transparent text-xs font-black text-on-surface focus:outline-none cursor-pointer w-full"
+                            />
+                            <span className="text-on-surface-variant text-xs font-bold">-</span>
+                            <input
+                                type="date"
+                                value={filterEnd}
+                                onChange={(e) => {
+                                    setFilterEnd(e.target.value);
+                                    handleFilter(String(currentBranch), filterStart, e.target.value);
+                                }}
+                                className="bg-transparent text-xs font-black text-on-surface focus:outline-none cursor-pointer w-full"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Print Dashboard Button */}
+                <div className="bg-surface rounded-2xl border border-outline-variant p-4 shadow-xs flex items-center justify-between transition-colors hover:border-primary/30">
+                    <div className="flex flex-col">
+                        <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Aksi Cetak</label>
+                        <span className="text-sm font-black text-on-surface mt-0.5">Laporan Dashboard</span>
+                    </div>
+                    <button
+                        onClick={() => window.print()}
+                        className="w-10 h-10 rounded-xl bg-primary text-on-primary font-bold flex items-center justify-center shadow-xs hover:bg-primary/90 cursor-pointer shrink-0"
+                        title="Cetak Laporan Dashboard"
+                    >
+                        <span className="material-symbols-outlined text-[20px]">print</span>
+                    </button>
+                </div>
             </div>
 
             {/* 4 KPI CARDS */}
@@ -104,9 +161,9 @@ export default function POSDashboard({
                 <div className="bg-surface rounded-2xl border border-outline-variant p-5 shadow-xs flex items-center justify-between">
                     <div>
                         <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                            Reservasi Hari Ini
+                            Total Reservasi
                         </p>
-                        <h3 className="text-2xl font-black text-on-surface mt-1">{kpis.todays_reservations}</h3>
+                        <h3 className="text-2xl font-black text-on-surface mt-1">{kpis.period_reservations}</h3>
                         <p className="text-xs text-primary font-semibold mt-1">Jadwal pemeriksaan & fitting</p>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
@@ -117,10 +174,10 @@ export default function POSDashboard({
                 <div className="bg-surface rounded-2xl border border-outline-variant p-5 shadow-xs flex items-center justify-between">
                     <div>
                         <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                            Pendapatan POS Hari Ini
+                            Total Pendapatan POS
                         </p>
                         <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-                            {formatRupiah(kpis.todays_revenue)}
+                            {formatRupiah(kpis.period_revenue)}
                         </h3>
                         <p className="text-xs text-emerald-600/80 font-semibold mt-1">Penjualan produk & layanan</p>
                     </div>
@@ -223,33 +280,79 @@ export default function POSDashboard({
                 </div>
             </div>
 
-            {/* SALES BY BRANCH TABLE */}
-            <div className="bg-surface rounded-2xl border border-outline-variant p-5 shadow-xs">
-                <h3 className="font-black text-base text-on-surface flex items-center gap-2 mb-4">
-                    <span className="material-symbols-outlined text-primary">storefront</span>
-                    <span>Pendapatan POS per Cabang Optik</span>
-                </h3>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr className="border-b border-outline-variant bg-surface-variant/40 text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
-                                <th className="p-3">Nama Cabang</th>
-                                <th className="p-3">Total Transaksi POS</th>
-                                <th className="p-3 text-right">Pendapatan Bersih</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-outline-variant/60">
-                            {salesByBranch.map((b, idx) => (
-                                <tr key={idx}>
-                                    <td className="p-3 font-bold text-on-surface">{b.branch_name}</td>
-                                    <td className="p-3 font-medium">{b.transactions} Transaksi</td>
-                                    <td className="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">
-                                        {formatRupiah(Number(b.revenue))}
-                                    </td>
+            {/* SALES BY BRANCH & TOP AFFILIATES */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                {/* SALES BY BRANCH TABLE */}
+                <div className="bg-surface rounded-2xl border border-outline-variant p-5 shadow-xs">
+                    <h3 className="font-black text-base text-on-surface flex items-center gap-2 mb-4">
+                        <span className="material-symbols-outlined text-primary">storefront</span>
+                        <span>Pendapatan POS per Cabang Optik</span>
+                    </h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr className="border-b border-outline-variant bg-surface-variant/40 text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
+                                    <th className="p-3">Nama Cabang</th>
+                                    <th className="p-3">Total Transaksi POS</th>
+                                    <th className="p-3 text-right">Pendapatan Bersih</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-outline-variant/60">
+                                {salesByBranch.map((b, idx) => (
+                                    <tr key={idx}>
+                                        <td className="p-3 font-bold text-on-surface">{b.branch_name}</td>
+                                        <td className="p-3 font-medium">{b.transactions} Transaksi</td>
+                                        <td className="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">
+                                            {formatRupiah(Number(b.revenue))}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* TOP AFFILIATES TABLE */}
+                <div className="bg-surface rounded-2xl border border-outline-variant p-5 shadow-xs">
+                    <h3 className="font-black text-base text-on-surface flex items-center gap-2 mb-4">
+                        <span className="material-symbols-outlined text-primary">group</span>
+                        <span>Top Affiliator (Berdasarkan Omzet)</span>
+                    </h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr className="border-b border-outline-variant bg-surface-variant/40 text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
+                                    <th className="p-3">Nama Affiliator</th>
+                                    <th className="p-3">Total Transaksi</th>
+                                    <th className="p-3 text-right">Est. Komisi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-outline-variant/60">
+                                {topAffiliates.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={3} className="p-6 text-center text-on-surface-variant text-xs">
+                                            Belum ada data affiliator.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    topAffiliates.map((aff, idx) => (
+                                        <tr key={idx}>
+                                            <td className="p-3">
+                                                <p className="font-bold text-on-surface">{aff.user?.full_name || 'Tanpa Nama'}</p>
+                                                <p className="text-[10px] text-on-surface-variant font-mono">{aff.referral_code}</p>
+                                            </td>
+                                            <td className="p-3 font-medium text-xs">
+                                                {aff.sales_count} Trx ({formatRupiah(Number(aff.total_revenue))})
+                                            </td>
+                                            <td className="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">
+                                                {formatRupiah(Number(aff.estimated_commission))}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -267,8 +370,9 @@ export default function POSDashboard({
                                 <th className="p-3">Waktu</th>
                                 <th className="p-3">Pelanggan</th>
                                 <th className="p-3">Cabang</th>
+                                <th className="p-3">Affiliator</th>
                                 <th className="p-3 text-right">Total Tagihan</th>
-                                <th className="p-3 text-center">Aksi Print</th>
+                                <th className="p-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-outline-variant/60">
@@ -295,19 +399,40 @@ export default function POSDashboard({
                                             {sale.walkin_name || sale.customer?.full_name || 'Walk-in'}
                                         </td>
                                         <td className="p-3 text-on-surface-variant">{sale.branch?.name || '-'}</td>
+                                        <td className="p-3 text-on-surface-variant">
+                                            {sale.affiliate ? (
+                                                <div className="flex flex-col">
+                                                    <span className="font-semibold text-primary">{sale.affiliate.user?.full_name}</span>
+                                                    <span className="text-[10px]">{sale.affiliate.referral_code}</span>
+                                                </div>
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </td>
                                         <td className="p-3 text-right font-black text-emerald-600 dark:text-emerald-400">
                                             {formatRupiah(Number(sale.grand_total))}
                                         </td>
                                         <td className="p-3 text-center">
-                                            <button
-                                                type="button"
-                                                onClick={() => setSelectedSaleToPrint(sale)}
-                                                className="px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
-                                                title="Cetak Struk Transaksi"
-                                            >
-                                                <span className="material-symbols-outlined text-[15px]">print</span>
-                                                <span>Cetak</span>
-                                            </button>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedSaleToView(sale)}
+                                                    className="px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-600 text-indigo-600 hover:text-white font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                                                    title="Lihat Detail & Komisi"
+                                                >
+                                                    <span className="material-symbols-outlined text-[15px]">visibility</span>
+                                                    <span>View</span>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedSaleToPrint(sale)}
+                                                    className="px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                                                    title="Cetak Struk Transaksi"
+                                                >
+                                                    <span className="material-symbols-outlined text-[15px]">print</span>
+                                                    <span>Cetak</span>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -322,6 +447,13 @@ export default function POSDashboard({
                 show={Boolean(selectedSaleToPrint)}
                 onClose={() => setSelectedSaleToPrint(null)}
                 sale={selectedSaleToPrint}
+            />
+
+            {/* Sale Detail Modal for Viewing Affiliate & Commission */}
+            <SaleDetailModal
+                show={Boolean(selectedSaleToView)}
+                onClose={() => setSelectedSaleToView(null)}
+                sale={selectedSaleToView}
             />
         </AdminLayout>
     );
