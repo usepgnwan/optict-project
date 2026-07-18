@@ -50,7 +50,20 @@ Route::get('/layanan', [\App\Http\Controllers\SpecialistServiceController::class
 Route::get('/layanan/{slug}', [\App\Http\Controllers\SpecialistServiceController::class, 'publicShow'])->name('layanan.show');
 
 Route::get('/affiliate', function () {
-    return Inertia::render('Affiliate');
+    $products = \App\Models\Product::active()
+        ->whereNotNull('commission_amount')
+        ->where('commission_amount', '>', 0)
+        ->get(['name', 'category', 'commission_amount', 'commission_type']);
+        
+    $services = \App\Models\Service::active()
+        ->whereNotNull('commission_amount')
+        ->where('commission_amount', '>', 0)
+        ->get(['name', 'commission_amount', 'commission_type']);
+
+    return Inertia::render('Affiliate', [
+        'products' => $products,
+        'services' => $services,
+    ]);
 })->name('affiliate');
 Route::post('/affiliate', [\App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
 
