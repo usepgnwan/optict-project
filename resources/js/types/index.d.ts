@@ -89,6 +89,7 @@ export interface User {
     is_active?: boolean;
     role?: Role;
     branch?: Branch;
+    avatar?: string | null;
 }
 
 export type PageProps<

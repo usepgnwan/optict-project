@@ -23,6 +23,8 @@ interface Service {
     price: number;
     is_active: boolean;
     category?: ServiceCategory;
+    commission_type?: 'percentage' | 'fixed' | null;
+    commission_amount?: number | string | null;
 }
 
 interface ServicesPageProps {
