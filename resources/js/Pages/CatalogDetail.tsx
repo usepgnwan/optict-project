@@ -58,6 +58,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                     city: b.city || 'Jakarta',
                     address: b.address || '',
                     stock: inv ? inv.current_stock : 0,
+                    phone: b.phone || '',
                 };
             });
 
@@ -76,8 +77,8 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                 description: targetDb.description || 'Bingkai kacamata presisi tinggi standar optikal Harmoni by Phoeinx Sehat.',
                 centralStock: targetDb.central_inventory?.quantity ?? 0,
                 branchAvailability: defaultBranches.length > 0 ? defaultBranches : [
-                    { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 0 },
-                    { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0 },
+                    { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 0, phone: '' },
+                    { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 0, phone: '' },
                 ],
             };
         }
@@ -98,8 +99,8 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                 description: 'Bingkai berbahan titanium murni yang sangat ringan, anti-karat, serta hipoalergenik untuk kenyamanan maksimal sepanjang hari.',
                 centralStock: 24,
                 branchAvailability: [
-                    { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8 },
-                    { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5 },
+                    { branchId: 1, branchName: 'Harmoni by Phoeinx Sehat Jakarta Pusat', city: 'Jakarta', address: 'Jl. MH Thamrin No. 15, Menteng', stock: 8, phone: '' },
+                    { branchId: 2, branchName: 'Harmoni by Phoeinx Sehat Surabaya', city: 'Surabaya', address: 'Jl. Tunjungan No. 45, Genteng', stock: 5, phone: '' },
                 ],
             },
         ];
