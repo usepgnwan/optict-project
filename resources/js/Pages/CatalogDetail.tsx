@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import HomeLayout from '@/Layouts/HomeLayout';
 import CtaSection from '@/Components/Home/CtaSection';
 
@@ -11,6 +11,15 @@ interface CatalogDetailProps {
 }
 
 export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branches = [] }: CatalogDetailProps) {
+    const { settingWaNumber, settingWaCatalogMessage } = usePage().props as any;
+    
+    const cleanPhoneNumber = (phone: string) => {
+        let clean = (phone || '').replace(/\D/g, '');
+        if (clean.startsWith('0')) return '62' + clean.slice(1);
+        if (clean.startsWith('8')) return '62' + clean;
+        return clean || '6281234567890';
+    };
+
     const toSlug = (text: string) =>
         text
             .toLowerCase()
@@ -128,8 +137,16 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
 
     const selectedBranch = product.branchAvailability.find((b: any) => b.branchId === selectedBranchId);
     const isWaDisabled = !selectedBranch || selectedBranch.stock <= 0;
+    
+    const getCatalogMessage = (branchName: string, productName: string) => {
+        let template = settingWaCatalogMessage || 'Halo Harmoni Kacamata, saya tertarik memesan kacamata [produk] di cabang [cabang].';
+        template = template.replace(/\[produk\]/gi, productName);
+        template = template.replace(/\[cabang\]/gi, branchName);
+        return encodeURIComponent(template);
+    };
+
     const waUrl = selectedBranch
-        ? `https://wa.me/6281234567890?text=Halo%20Optik%20Calm%20${encodeURIComponent(selectedBranch.branchName)},%20saya%20tertarik%20reservasi%20kacamata%20${encodeURIComponent(product.name)}`
+        ? `https://wa.me/${cleanPhoneNumber(selectedBranch.phone || settingWaNumber)}?text=${getCatalogMessage(selectedBranch.branchName, product.name)}`
         : '#';
 
     return (
@@ -386,7 +403,7 @@ export default function CatalogDetail({ slug, dbProduct, dbProducts = [], branch
                                             {branch.city}
                                         </span>
                                         <a
-                                            href={`https://wa.me/6281234567890?text=Halo%20Optik%20Calm%20${encodeURIComponent(branch.branchName)},%20saya%20tertarik%20reservasi%20kacamata%20${encodeURIComponent(product.name)}`}
+                                            href={`https://wa.me/${cleanPhoneNumber(branch.phone || settingWaNumber)}?text=${getCatalogMessage(branch.branchName, product.name)}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-on-primary font-bold text-xs transition-colors"

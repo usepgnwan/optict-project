@@ -11,14 +11,14 @@ export default function AboutSection() {
                 <div
                     className="aspect-square bg-cover bg-center rounded-[48px] shadow-2xl overflow-hidden border-8 border-white"
                     style={{
-                        backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuB4-xrR9vvuj88dJfTL6vdxNrX02_Qfm9JfFeXS09Z2leXZrFAPIWsGyhz9O8-7EwmEjZI73lt6JB4r-59dfSW_131KdOjd8ww-52QvPxIVgcUcPStWPT8UB7tPmwhokwsBbO4p2S6e_YX-EBdwN28-KTu6sIj7VqahhgkkTKf-V9A18KOF6x2yXkllBomLemKmiign3DRQJLeAQmBsLvVv5LjFUhZozxTZLhRlzAvyMRrMM3WwHwObqbRveSqgEgYnH1lZNkUI4os')`,
+                        backgroundImage: `url('images/img-2.jpeg')`,
                     }}
                 />
                 <div className="absolute -bottom-10 -right-10 bg-primary text-on-primary p-8 rounded-[32px] shadow-2xl hidden lg:block border-4 border-white">
                     <div className="flex items-center gap-5">
-                        <div className="text-5xl font-bold">15+</div>
+                        <div className="text-5xl font-bold">10k+</div>
                         <div className="text-sm font-medium leading-tight opacity-90">
-                            Tahun<br />Pengalaman<br />Teruji
+                            Pelanggan <br /> Setia <br />& Puas
                         </div>
                     </div>
                 </div>
@@ -45,6 +45,6 @@ export default function AboutSection() {
                     Pelajari Selengkapnya
                 </button>
             </div>
-        </section>
+        </section >
     );
 }

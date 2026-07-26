@@ -8,15 +8,16 @@
         <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
 
         <!-- Open Graph / WhatsApp / Social Share Meta Tags -->
+        <meta name="description" content="Harmoni Kacamata: Layanan kesehatan mata terpercaya untuk kenyamanan Anda. Pemesanan kacamata minus plus tersedia di beberapa cabang, sesuaikan dengan cabang terdekat Anda.">
         <meta property="og:title" content="Harmoni by Phoenix Sehat — Layanan Kesehatan Mata Premium">
-        <meta property="og:description" content="Layanan kesehatan mata premium yang menghadirkan solusi penglihatan komprehensif, memadukan pemeriksaan refraksi akurat, konsultasi ahli, dan penyediaan bingkai berkualitas.">
+        <meta property="og:description" content="Harmoni Kacamata: Layanan kesehatan mata terpercaya untuk kenyamanan Anda. Pemesanan kacamata minus plus tersedia di beberapa cabang, sesuaikan dengan cabang terdekat Anda.">
         <meta property="og:image" content="{{ asset('logo.png') }}">
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ url('/') }}">
 
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Harmoni by Phoenix Sehat — Layanan Kesehatan Mata Premium">
-        <meta name="twitter:description" content="Harmoni by Phoenix Sehat adalah pusat perawatan mata holistik dan penyedia kacamata profesional yang berdedikasi untuk meningkatkan kualitas penglihatan pelanggan.">
+        <meta name="twitter:description" content="Harmoni Kacamata: Layanan kesehatan mata terpercaya untuk kenyamanan Anda. Pemesanan kacamata minus plus tersedia di beberapa cabang, sesuaikan dengan cabang terdekat Anda.">
         <meta name="twitter:image" content="{{ asset('logo.png') }}">
 
         <!-- Fonts -->

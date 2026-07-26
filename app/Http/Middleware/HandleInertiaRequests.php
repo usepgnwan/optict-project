@@ -40,6 +40,12 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sharedComplaintTypes' => fn () => \App\Models\ComplaintType::active()->ordered()->get(),
+            'settingWaNumber' => fn () => \App\Models\Setting::where('key', 'whatsapp_number')->value('value') ?? '081199988877',
+            'settingWaMessage' => fn () => \App\Models\Setting::where('key', 'whatsapp_message')->value('value') ?? 'Halo Harmoni Kacamata, saya tertarik ingin reservasi. Bisa jelaskan secara detail bagaimana prosesnya?',
+            'settingWaCatalogMessage' => fn () => \App\Models\Setting::where('key', 'whatsapp_catalog_message')->value('value') ?? 'Halo Harmoni Kacamata, saya tertarik memesan kacamata [produk] di cabang [cabang].',
+            'settingWaBookingMessage' => fn () => \App\Models\Setting::where('key', 'whatsapp_booking_message')->value('value') ?? "Halo Harmoni by Phoeinx Sehat ([cabang]), saya sudah membuat reservasi online dengan detail berikut:\n\n• No. Reservasi: [no_reservasi]\n• Nama: [nama]\n• WhatsApp: [whatsapp]\n• Cabang / Layanan: [cabang]\n• Tipe Keluhan: [keluhan]\n• Rencana Tanggal: [tanggal]\n\nMohon konfirmasinya, terima kasih!",
+            'newBookings' => fn () => $request->user() ? \App\Models\Reservation::with('branch')->where('status', 'pending')->latest()->take(5)->get() : [],
+            'newBookingsCount' => fn () => $request->user() ? \App\Models\Reservation::where('status', 'pending')->count() : 0,
         ];
     }
 }

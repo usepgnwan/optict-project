@@ -18,13 +18,16 @@ interface ProductsPageProps {
     filters: {
         search?: string;
         category?: string;
+        branch_id?: string;
     };
     categories: Record<string, string>;
+    branches: any[];
 }
 
-export default function ProductsIndex({ products, filters, categories }: ProductsPageProps) {
+export default function ProductsIndex({ products, filters, categories, branches }: ProductsPageProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [selectedCategory, setSelectedCategory] = useState(filters.category || '');
+    const [selectedBranch, setSelectedBranch] = useState(filters.branch_id || '');
     const [showModal, setShowModal] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
@@ -52,7 +55,7 @@ export default function ProductsIndex({ products, filters, categories }: Product
         setSearch(val);
         router.get(
             route('products.index'),
-            { search: val, category: selectedCategory },
+            { search: val, category: selectedCategory, branch_id: selectedBranch },
             { preserveState: true, replace: true }
         );
     };
@@ -61,7 +64,16 @@ export default function ProductsIndex({ products, filters, categories }: Product
         setSelectedCategory(cat);
         router.get(
             route('products.index'),
-            { search, category: cat },
+            { search, category: cat, branch_id: selectedBranch },
+            { preserveState: true, replace: true }
+        );
+    };
+
+    const handleBranchChange = (branchId: string) => {
+        setSelectedBranch(branchId);
+        router.get(
+            route('products.index'),
+            { search, category: selectedCategory, branch_id: branchId },
             { preserveState: true, replace: true }
         );
     };
@@ -281,13 +293,22 @@ export default function ProductsIndex({ products, filters, categories }: Product
             ),
         },
         {
-            header: 'Stok Pusat',
+            header: selectedBranch ? 'Stok Cabang' : 'Stok Pusat',
             key: 'stock',
-            render: (item: Product) => (
-                <span className="font-extrabold text-sm text-primary">
-                    {item.central_inventory?.quantity || 0} Unit
-                </span>
-            ),
+            render: (item: Product) => {
+                let qty = 0;
+                if (selectedBranch) {
+                    const branchInv = (item as any).branch_inventories?.find((b: any) => b.branch_id == selectedBranch);
+                    qty = branchInv ? branchInv.quantity : 0;
+                } else {
+                    qty = (item as any).central_inventory?.quantity || 0;
+                }
+                return (
+                    <span className="font-extrabold text-sm text-primary">
+                        {qty} Unit
+                    </span>
+                );
+            },
         },
         {
             header: 'Status',
@@ -349,7 +370,19 @@ export default function ProductsIndex({ products, filters, categories }: Product
                 onSearchChange={handleSearch}
                 placeholder="Cari nama produk, SKU, barcode, atau brand..."
             >
-                <div className="w-52">
+                <div className="flex gap-3 min-w-[320px] max-w-[420px] w-full">
+                    <SelectSearch
+                        value={selectedBranch}
+                        onChange={(val) => handleBranchChange(val)}
+                        placeholder="Pilih Cabang"
+                    >
+                        <option value="">Semua (Stok Pusat)</option>
+                        {branches?.map((b) => (
+                            <option key={b.id} value={b.id}>
+                                {b.name}
+                            </option>
+                        ))}
+                    </SelectSearch>
                     <SelectSearch
                         value={selectedCategory}
                         onChange={(val) => handleCategoryChange(val)}

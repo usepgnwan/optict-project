@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockAdjustmentController;
 use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\StockTransferController;
@@ -119,6 +120,10 @@ Route::middleware(['auth', 'verified', 'role:super_admin,warehouse_admin,branch_
     Route::resource('branches', BranchController::class);
     Route::resource('products', ProductController::class);
 
+    // Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
     // Inventory
     Route::get('/central-inventory', [CentralInventoryController::class, 'index'])->name('central-inventory.index');
     Route::get('/branch-inventory', [BranchInventoryController::class, 'index'])->name('branch-inventory.index');
@@ -180,3 +185,51 @@ Route::middleware(['auth', 'verified', 'role:super_admin,warehouse_admin,branch_
 
 require __DIR__.'/auth.php';
 
+Route::get('/sitemap.xml', function () {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    
+    $urls = [
+        '/',
+        '/booking',
+        '/katalog-kacamata',
+        '/layanan',
+        '/affiliate',
+    ];
+
+    foreach ($urls as $url) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . url($url) . '</loc>';
+        $xml .= '<changefreq>daily</changefreq>';
+        $xml .= '<priority>' . ($url == '/' ? '1.0' : '0.8') . '</priority>';
+        $xml .= '</url>';
+    }
+
+    $products = \App\Models\Product::active()->get();
+    foreach ($products as $product) {
+        $slug = \Illuminate\Support\Str::slug($product->name);
+        $xml .= '<url>';
+        $xml .= '<loc>' . url('/katalog-kacamata/' . $slug) . '</loc>';
+        $xml .= '<changefreq>weekly</changefreq>';
+        $xml .= '<priority>0.7</priority>';
+        $xml .= '</url>';
+    }
+
+    $services = \App\Models\SpecialistService::active()->get();
+    foreach ($services as $service) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . url('/layanan/' . $service->slug) . '</loc>';
+        $xml .= '<changefreq>monthly</changefreq>';
+        $xml .= '<priority>0.6</priority>';
+        $xml .= '</url>';
+    }
+
+    $xml .= '</urlset>';
+
+    return response($xml)->header('Content-Type', 'text/xml');
+});
+
+// Fallback Route for 404 (Not Found)
+Route::fallback(function () {
+    return Inertia::render('Errors/404');
+});

@@ -28,14 +28,14 @@ export default function HeroSection() {
 
                 <h1 className="text-5xl font-bold text-primary tracking-tight leading-tight">
                     <BlurText
-                        text="Layanan Kesehatan Mata Terpercaya untuk Kenyamanan Anda"
+                        text="Penglihatan Jernih untuk Kualitas Hidup yang Lebih Baik"
                         animateBy="words"
                         delay={80}
                     />
                 </h1>
 
                 <p className="text-on-surface-variant text-lg leading-relaxed max-w-lg">
-                    Dapatkan pemeriksaan mata komprehensif dengan teknologi terkini dan pilihan bingkai berkualitas untuk penglihatan yang lebih jernih.
+                    Temukan solusi kesehatan mata terlengkap. Mulai dari alatdiagnostik mutakhir hingga koleksi kacamata trendi yang pas untuk menyempurnakan gaya Anda sehari-hari.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -60,24 +60,24 @@ export default function HeroSection() {
                 <div className="flex flex-wrap gap-10 pt-8 border-t border-outline-variant">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-tertiary flex items-center justify-center text-primary shadow-inner">
-                            <span className="material-symbols-outlined">medical_services</span>
+                            <span className="material-symbols-outlined">checklist</span>
                         </div>
                         <div>
                             <div className="font-bold text-xl text-primary flex items-center">
-                                <CountUp end={100} suffix="+" duration={2} />
+                                <CountUp end={99} suffix="%" duration={2} />
                             </div>
-                            <div className="text-xs text-on-surface-variant">Tim Profesional</div>
+                            <div className="text-xs text-on-surface-variant">Akurasi Diagnostik</div>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary shadow-inner">
-                            <span className="material-symbols-outlined">sentiment_satisfied</span>
+                            <span className="material-symbols-outlined">workspace_premium</span>
                         </div>
                         <div>
                             <div className="font-bold text-xl text-primary flex items-center">
-                                <CountUp end={100} suffix="+" duration={2.5} />
+                                <CountUp end={5} suffix=" Tahun" duration={2.5} />
                             </div>
-                            <div className="text-xs text-on-surface-variant">Customer Puas</div>
+                            <div className="text-xs text-on-surface-variant">Pengalaman Optik</div>
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@ export default function HeroSection() {
                     <img
                         alt="Professional Optician"
                         className="w-full h-[580px] object-cover rounded-[40px] shadow-2xl relative z-10 border-8 border-white"
-                        src="https://lh3.googleusercontent.com/aida/AP1WRLtXY8MncdPk1qoyNOOTOz7m5mAgMgc9gTh_McBJdWFLK6eKk-vgsQNw4RoWE1kY7o0eQnDiwhI8bxEHeZEoD6W49Pv-ixVLrbuCiIT5kHhn5N3TgK5i2QSI6miQRngXZZ4kvw8x29d4A6Yh43GLWMuNVv66CIlS8GWIe0-POSA6ms-CV34z0HtQqn93Sa5UtfYjk-XKG_gpNo_ZP7fsG8oSRGjXIXSyvafxVQ7M_VqjlWZzHAIOrb6jcj4"
+                        src="images/img-1.jpeg"
                     />
                 </TiltedCard>
             </div>

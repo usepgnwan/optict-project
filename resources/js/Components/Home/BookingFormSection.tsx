@@ -33,17 +33,17 @@ export default function BookingFormSection({
     complaintTypes?: any[];
     isStandalone?: boolean;
 }) {
+    const { sharedComplaintTypes, complaintTypes: pageComplaintTypes, settingWaNumber, settingWaBookingMessage } = usePage().props as any;
+
     const activeBookingBranches =
         branches && branches.length > 0
             ? branches.map((b: any) => ({
                 id: b.id,
                 city: b.city || 'Cabang',
                 name: b.name,
-                phone: b.phone || '081199988877',
+                phone: b.phone || settingWaNumber || '081199988877',
             }))
             : fallbackBranches;
-
-    const { sharedComplaintTypes, complaintTypes: pageComplaintTypes } = usePage().props as any;
     const activeComplaintTypes =
         complaintTypes && complaintTypes.length > 0
             ? complaintTypes
@@ -138,7 +138,7 @@ export default function BookingFormSection({
     };
 
     const openWhatsAppChat = () => {
-        const rawPhone = selectedBranch?.phone || '081199988877';
+        const rawPhone = selectedBranch?.phone || settingWaNumber || '081199988877';
         let cleanPhone = rawPhone.replace(/\D/g, '');
         if (cleanPhone.startsWith('0')) {
             cleanPhone = '62' + cleanPhone.slice(1);
@@ -146,7 +146,15 @@ export default function BookingFormSection({
             cleanPhone = '62' + cleanPhone;
         }
 
-        const text = `Halo Harmoni by Phoeinx Sehat (${selectedBranch.city} - ${selectedBranch.name}), saya sudah membuat reservasi online dengan detail berikut:\n\n• No. Reservasi: ${savedReservationNumber}\n• Nama: ${fullName}\n• WhatsApp: ${whatsapp}\n• Cabang / Layanan: ${selectedBranch.city} (${selectedBranch.name})\n• Tipe Keluhan: ${complaint}\n• Rencana Tanggal: ${date || 'Segera'}\n\nMohon konfirmasinya, terima kasih!`;
+        let template = settingWaBookingMessage || "Halo Harmoni by Phoeinx Sehat ([cabang]), saya sudah membuat reservasi online dengan detail berikut:\n\n• No. Reservasi: [no_reservasi]\n• Nama: [nama]\n• WhatsApp: [whatsapp]\n• Cabang / Layanan: [cabang]\n• Tipe Keluhan: [keluhan]\n• Rencana Tanggal: [tanggal]\n\nMohon konfirmasinya, terima kasih!";
+        
+        let text = template.replace(/\[cabang\]/gi, `${selectedBranch?.city || 'Cabang'} - ${selectedBranch?.name || 'Optik'}`)
+                           .replace(/\[no_reservasi\]/gi, savedReservationNumber)
+                           .replace(/\[nama\]/gi, fullName)
+                           .replace(/\[whatsapp\]/gi, whatsapp)
+                           .replace(/\[keluhan\]/gi, complaint)
+                           .replace(/\[tanggal\]/gi, date || 'Segera');
+
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
     };
 
@@ -381,7 +389,7 @@ export default function BookingFormSection({
                                 <span>Konfirmasi WhatsApp ({selectedBranch.city})</span>
                             </button>
                             <p className="text-xs text-on-surface-variant">
-                                No. WhatsApp Cabang: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{selectedBranch.phone || '081199988877'}</span>
+                                No. WhatsApp Cabang: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{selectedBranch.phone || settingWaNumber || '081199988877'}</span>
                             </p>
                             <button
                                 type="button"
