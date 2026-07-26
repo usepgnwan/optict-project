@@ -1,2 +1,34 @@
 User-agent: *
-Disallow:
+
+# Izinkan akses ke halaman publik (Landing Page & Menu Inti)
+Allow: /$
+Allow: /booking
+Allow: /katalog-kacamata
+Allow: /layanan
+Allow: /affiliate
+
+# Kecualikan semua router admin / autentikasi / sistem internal
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /settings
+Disallow: /reports
+Disallow: /users
+Disallow: /reservations
+Disallow: /branches
+Disallow: /products
+Disallow: /stock-transfers
+Disallow: /stock-adjustments
+Disallow: /stock-opnames
+Disallow: /pos
+Disallow: /api
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /marketing-kits
+Disallow: /riwayat
+Disallow: /affiliates
+
+# Tautkan ke Sitemap dinamis yang baru saja dibuat
+Sitemap: https://harmonikacamata.com/sitemap.xml
