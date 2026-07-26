@@ -53,15 +53,22 @@ class ProductController extends Controller
             $query->where('is_active', $request->boolean('is_active'));
         }
 
-        $products = $query->with(['centralInventory'])
+        $branchId = $request->input('branch_id');
+
+        $products = $query->with(['centralInventory', 'branchInventories' => function ($q) use ($branchId) {
+            if ($branchId) {
+                $q->where('branch_id', $branchId);
+            }
+        }])
             ->orderByDesc('created_at')
             ->paginate(15)
             ->withQueryString();
 
         return Inertia::render('Admin/Products/Index', [
             'products' => $products,
-            'filters' => $request->only(['search', 'category', 'is_active']),
+            'filters' => $request->only(['search', 'category', 'is_active', 'branch_id']),
             'categories' => Product::getCategories(),
+            'branches' => \App\Models\Branch::active()->get(),
         ]);
     }
 

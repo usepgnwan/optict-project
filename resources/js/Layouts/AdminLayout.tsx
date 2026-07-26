@@ -8,10 +8,11 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children, title }: AdminLayoutProps) {
-    const { auth, flash } = usePage().props as any;
+    const { auth, flash, newBookingsCount = 0, newBookings = [] } = usePage().props as any;
     const user = auth?.user;
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
     const { isDark, toggleDarkMode } = useDarkMode();
 
     const currentRoute = route().current() || '';
@@ -79,6 +80,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             category: 'PENGATURAN',
             items: [
                 { name: 'Manajemen User & Role', href: route('users.index'), icon: 'manage_accounts', active: currentRoute.startsWith('users.') },
+                { name: 'Pengaturan Umum', href: route('settings.index'), icon: 'settings', active: currentRoute.startsWith('settings.') },
             ],
         },
     ];
@@ -237,14 +239,68 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
                         {/* Notifications */}
                         <div className="relative">
-                            <button className="p-2.5 rounded-full hover:bg-tertiary/50 text-on-surface-variant transition-colors relative cursor-pointer">
+                            <button 
+                                onClick={() => setShowNotifications(!showNotifications)}
+                                className="p-2.5 rounded-full hover:bg-tertiary/50 text-on-surface-variant transition-colors relative cursor-pointer"
+                            >
                                 <span className="material-symbols-outlined text-[22px]">
                                     notifications
                                 </span>
-                                <span className="absolute top-1.5 right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-surface">
-                                    23
-                                </span>
+                                {newBookingsCount > 0 && (
+                                    <span className="absolute top-1.5 right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-surface animate-pulse">
+                                        {newBookingsCount > 99 ? '99+' : newBookingsCount}
+                                    </span>
+                                )}
                             </button>
+
+                            {/* Dropdown Menu */}
+                            {showNotifications && (
+                                <>
+                                    <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)} />
+                                    <div className="absolute right-0 mt-2 w-80 bg-surface border border-outline-variant rounded-2xl shadow-xl z-50 overflow-hidden">
+                                        <div className="p-4 border-b border-outline-variant bg-surface-variant/30 flex items-center justify-between">
+                                            <h3 className="font-bold text-sm text-on-surface">Reservasi Baru</h3>
+                                            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-md font-semibold">{newBookingsCount} Pending</span>
+                                        </div>
+                                        <div className="max-h-[320px] overflow-y-auto">
+                                            {newBookings.length > 0 ? (
+                                                newBookings.map((booking: any) => (
+                                                    <Link
+                                                        key={booking.id}
+                                                        href={route('reservations.index')}
+                                                        className="block p-4 border-b border-outline-variant hover:bg-tertiary/20 transition-colors last:border-b-0"
+                                                        onClick={() => setShowNotifications(false)}
+                                                    >
+                                                        <div className="flex justify-between items-start mb-1">
+                                                            <span className="font-bold text-sm text-on-surface truncate pr-2">{booking.display_name}</span>
+                                                            <span className="text-[10px] text-on-surface-variant shrink-0 whitespace-nowrap">
+                                                                {new Date(booking.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-xs text-on-surface-variant truncate">
+                                                            {booking.branch?.name || 'Cabang'} • {booking.reservation_date}
+                                                        </div>
+                                                    </Link>
+                                                ))
+                                            ) : (
+                                                <div className="p-6 text-center text-sm text-on-surface-variant flex flex-col items-center gap-2">
+                                                    <span className="material-symbols-outlined text-3xl opacity-50">done_all</span>
+                                                    Tidak ada reservasi baru.
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="p-3 border-t border-outline-variant bg-surface-variant/20 text-center">
+                                            <Link
+                                                href={route('reservations.index')}
+                                                className="text-xs font-bold text-primary hover:underline"
+                                                onClick={() => setShowNotifications(false)}
+                                            >
+                                                Lihat Semua Reservasi
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         {/* User Profile Pill & Logout */}

@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockAdjustmentController;
 use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\StockTransferController;
@@ -118,6 +119,10 @@ Route::middleware(['auth', 'verified', 'role:super_admin,warehouse_admin,branch_
     // Master Data
     Route::resource('branches', BranchController::class);
     Route::resource('products', ProductController::class);
+
+    // Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     // Inventory
     Route::get('/central-inventory', [CentralInventoryController::class, 'index'])->name('central-inventory.index');
